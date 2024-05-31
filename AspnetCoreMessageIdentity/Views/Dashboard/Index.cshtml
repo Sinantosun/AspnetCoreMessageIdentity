@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Identity Message - Dashboard";
+    Layout = "~/Views/DefaultLayout/Index.cshtml";
+}
+
+
+
+<div class="wrapper wrapper-content">
+    @await Component.InvokeAsync("_StatisticComponentPartial")
+    <div class="row">
+        @await Component.InvokeAsync("_DashboardMessagesComponentPartial")
+        @await Component.InvokeAsync("_DashboardMessageStatus")
+    </div>
+</div>
+

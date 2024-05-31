@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Mesajlarım";
+    Layout = "~/Views/DefaultLayout/Index.cshtml";
+}
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+
+        @await Component.InvokeAsync("_MailboxSideComponentPartial")
+        @await Component.InvokeAsync("_MailboxComponentPartial")
+       
+    </div>
+</div>
+
+
+
+
+
+

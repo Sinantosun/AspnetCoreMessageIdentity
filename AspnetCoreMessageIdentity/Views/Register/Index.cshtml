@@ -1,0 +1,157 @@
+﻿@using AspnetCoreMessageIdentity.Models.Identity;
+@model RegisterViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>INSPINIA | Register</title>
+
+    <link href="~/Template/inspinia-gh-pages/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Template/inspinia-gh-pages/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/Template/inspinia-gh-pages/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="~/Template/inspinia-gh-pages/css/animate.css" rel="stylesheet">
+    <link href="~/Template/inspinia-gh-pages/css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen   animated fadeInDown">
+        <div>
+            <h3>Hesap Oluştur</h3>
+            <p>Mesaj göndermek/görüntülemek için hemen ücretsiz bir hesap oluşturun!</p>
+            <form class="m-t" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control" asp-for="NameSurname" placeholder="Ad Soyad" required="">
+                    <span class="text-danger" asp-validation-for="NameSurname"></span>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" asp-for="UserName" placeholder="Kullanıcı Adınız" required="">
+                    <span class="text-danger" asp-validation-for="UserName"></span>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" asp-for="Mail" placeholder="Email Adresiniz" required="">
+                    <span class="text-danger" asp-validation-for="Mail"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" asp-for="Pwd" placeholder="Şifreniz" required="">
+                    <span class="text-danger" asp-validation-for="Pwd"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" asp-for="ConfirmPwd" placeholder="Şifreniz Tekrar" required="">
+                    <span class="text-danger" asp-validation-for="ConfirmPwd"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox i-checks"><label> <input asp-for="IsPolicyRead" required type="checkbox"><i></i> <a style="color:#3a74c5" onclick="ShowModal()"> Kullanım & Şartları </a> okudum kabul ediyorum </label></div>
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">Kayıt Ol</button>
+
+                <p class="text-muted text-center"><small>Zaten Hesabınız Varmı ?</small></p>
+                <a class="btn btn-sm btn-white btn-block" href="/Login/Index">Giriş Yap</a>
+                <div style="color:red; margin-top:20px">
+
+                    @Html.ValidationSummary()
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="~/Template/inspinia-gh-pages/js/jquery-3.1.1.min.js"></script>
+    <script src="~/Template/inspinia-gh-pages/js/popper.min.js"></script>
+    <script src="~/Template/inspinia-gh-pages/js/bootstrap.js"></script>
+    <!-- iCheck -->
+    <script src="~/Template/inspinia-gh-pages/js/plugins/iCheck/icheck.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+
+        function ShowModal() {
+            var modal = new bootstrap.Modal(document.querySelector(".modal"));
+            modal.show();
+        }
+
+    </script>
+
+
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Kullanım Şartları</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h1>Kullanım Şartları</h1>
+
+                    <div class="section">
+                        <h2>1. Giriş</h2>
+                        <p>Bu Kullanım Şartları, Identity Mesajlaşma tarafından sağlanan hizmetlerin kullanımını düzenlemektedir.</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>2. Hesap ve Güvenlik</h2>
+                        <p><strong>Kayıt:</strong> Uygulamayı kullanabilmek için bir hesap oluşturmanız gerekmektedir. Kayıt işlemi sırasında sağladığınız bilgilerin doğru ve güncel olması gerekmektedir.</p>
+                        <p><strong>Güvenlik:</strong> Hesabınızın güvenliğini sağlamak sizin sorumluluğunuzdadır. Hesabınızda şüpheli bir faaliyet fark ederseniz, derhal bizimle iletişime geçmelisiniz.</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>3. Kullanım Kuralları</h2>
+                        <p><strong>Yasal Kullanım:</strong> Uygulamayı yalnızca yasal amaçlarla kullanabilirsiniz. Herhangi bir yasa dışı veya yetkisiz faaliyet yasaktır.</p>
+                        <p><strong>İçerik:</strong> Uygulama üzerinden paylaştığınız tüm içerik sizin sorumluluğunuzdadır. Zararlı, tehditkar, taciz edici, iftira niteliğinde veya müstehcen içerik paylaşılması yasaktır.</p>
+                        <p><strong>Spam ve Hile:</strong> Uygulamayı spam gönderimleri veya dolandırıcılık faaliyetleri için kullanmak yasaktır.</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>4. Gizlilik</h2>
+                        <p>Kişisel bilgilerinizi nasıl topladığımız, kullandığımız ve koruduğumuz hakkında daha fazla bilgi edinmek için Gizlilik Politikamızı inceleyiniz.</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>5. Fikri Mülkiyet</h2>
+                        <p><strong>Lisans:</strong> Uygulamanın ve içeriklerinin tüm hakları bize veya lisans verenlerimize aittir. Uygulamayı yalnızca kişisel ve ticari olmayan kullanım için kullanma hakkına sahipsiniz.</p>
+                        <p><strong>İhlal:</strong> Fikri mülkiyet haklarımızı ihlal eden herhangi bir faaliyette bulunmanız yasaktır.</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>6. Sorumluluk Reddi</h2>
+                        <p><strong>Garanti Reddi:</strong> Uygulama, "olduğu gibi" ve "mevcut olduğu sürece" esasına göre sağlanmaktadır. Belirli bir amaca uygunluk veya ihlal etmeme dahil olmak üzere açık veya zımni herhangi bir garanti vermemekteyiz.</p>
+                        <p><strong>Sınırlı Sorumluluk:</strong> Uygulamanın kullanımından kaynaklanan doğrudan, dolaylı, arızi veya cezai zararlar için sorumluluk kabul etmeyiz.</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>7. Değişiklikler ve Sonlandırma</h2>
+                        <p><strong>Değişiklikler:</strong> Bu şartları herhangi bir zamanda değiştirme hakkını saklı tutarız. Şartlarda yapılan değişiklikler, uygulamada yayınlandığı tarihten itibaren geçerli olacaktır.</p>
+                        <p><strong>Sonlandırma:</strong> Bu şartları ihlal etmeniz durumunda hesabınızı askıya alma veya sonlandırma hakkımız saklıdır.</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>8. İletişim</h2>
+                        <p>Bu Kullanım Şartları hakkında herhangi bir sorunuz varsa, lütfen bizimle iletişime geçiniz: 000 000</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Okudum Onaylıyorum</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

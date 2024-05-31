@@ -1,0 +1,51 @@
+﻿@using AspnetCoreMessageIdentity.DAL.Entities;
+@model List<Mails>
+<div class="row border-bottom">
+    <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+            <li>
+                <span class="m-r-sm text-muted welcome-message">Identity Message Uygulamasına Hoş Geldiniz</span>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                    <i class="fa fa-envelope"></i>  <span class="label label-warning">@Model.Count()</span>
+                </a>
+                <ul class="dropdown-menu dropdown-messages">
+                    @foreach (var item in Model)
+                    {
+                          <li>
+                        <div class="dropdown-messages-box">
+                            <div class="media-body">
+                                <small class="float-right">(((item.Date).ToString("g"))</small>
+                                <strong>@item.SenderNameSurname</strong> - <strong>@item.Subject</strong>. <br>
+                            </div>
+                        </div>
+                    </li>
+                    }
+                  
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <div class="text-center link-block">
+                            <a href="mailbox.html" class="dropdown-item">
+                                <i class="fa fa-envelope"></i> <strong>Maillerim</strong>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+
+
+
+            <li>
+                <a href="login.html">
+                    <i class="fa fa-sign-out"></i> Çıkış Yap
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+</div>

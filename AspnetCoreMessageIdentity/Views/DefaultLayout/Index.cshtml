@@ -1,0 +1,39 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+
+@await Html.PartialAsync("~/Views/DefaultLayout/DefaultHeaderPartial.cshtml")
+
+<body class="">
+
+    <div id="wrapper">
+
+
+        @await Component.InvokeAsync("_DefaultSideBarPartialComponentPartial")
+        <div id="page-wrapper" class="gray-bg">
+             
+            @await Component.InvokeAsync("_NavbarComponentPartial")
+          
+
+            <div class="wrapper wrapper-content">
+               @RenderBody()
+            </div>
+            <div class="footer">
+                <div>
+                    <strong>Copyright</strong> Tüm Hakları Saklıdır &copy; @DateTime.Now.Year
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @await Html.PartialAsync("~/Views/DefaultLayout/DefaultScriptsPartial.cshtml")
+
+
+</body>
+
+</html>
