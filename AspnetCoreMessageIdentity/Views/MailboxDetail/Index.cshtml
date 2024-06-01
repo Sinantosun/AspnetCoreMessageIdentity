@@ -1,0 +1,22 @@
+﻿@using AspnetCoreMessageIdentity.DAL.Entities;
+@model Mails
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/DefaultLayout/Index.cshtml";
+}
+<script>
+    function printPage(divId) {
+        var printContents = document.getElementById(divId).innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+</script>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        @await Component.InvokeAsync("_MailboxSideComponentPartial")
+        @await Component.InvokeAsync("_MessageDetailComponentPartial",new {@id=Model.MailsId})
+
+    </div>
+</div>

@@ -4,8 +4,7 @@
     {
         public int MailsId { get; set; }
         public string Subject { get; set; }
-        public string ReciverNameSurname { get; set; }
-        public string SenderNameSurname { get; set; }
+     
         public string Content { get; set; }
         public string? Attachment { get; set; }
         public DateTime Date { get; set; }
@@ -17,5 +16,14 @@
 
         public int MailTagsID { get; set; }
         public MailTags MailTag { get; set; }
+
+        public int SenderId { get; set; }
+        public AppUser Sender { get; set; }
+
+        public int ReceiverId { get; set; }
+        public AppUser Receiver { get; set; }
+
+        public List<ReplyMails> ReplyMails { get; set; }
+
     }
 }

@@ -16,12 +16,12 @@ namespace AspnetCoreMessageIdentity.Controllers
             _signInManager = signInManager;
         }
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string? returnUrl)
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Index(LoginViewModel model)
+        public async Task<IActionResult> Index(LoginViewModel model, string? returnUrl)
         {
             await _signInManager.SignOutAsync();
             if (ModelState.IsValid)
@@ -29,7 +29,15 @@ namespace AspnetCoreMessageIdentity.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Pwd, false, true);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Dashboard");
+                    if (string.IsNullOrEmpty(returnUrl))
+                    {
+                        return RedirectToAction("Index", "Dashboard");
+                    }
+                    else
+                    {
+                        return Redirect(returnUrl);
+                    }
+                  
                 }
                 else if (result.IsLockedOut)
                 {

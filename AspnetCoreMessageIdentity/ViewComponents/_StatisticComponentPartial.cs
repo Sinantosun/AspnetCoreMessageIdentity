@@ -19,10 +19,10 @@ namespace AspnetCoreMessageIdentity.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            ViewBag.AllMessageCount = _mailContext.Mail.Count();
-            ViewBag.IsNotReadCount = _mailContext.Mail.Where(x => x.IsRead == false && x.ReciverNameSurname == user.NameSurname).Count();
-            ViewBag.TrashCount = _mailContext.Mail.Where(x => x.IsTrash == true && x.ReciverNameSurname == user.NameSurname).Count();
-            ViewBag.DraftCount = _mailContext.Mail.Where(x => x.IsDraft == true && x.ReciverNameSurname == user.NameSurname).Count();
+            ViewBag.AllMessageCount = _mailContext.Mail.Where(x => x.ReceiverId == user.Id).Count();
+            ViewBag.IsNotReadCount = _mailContext.Mail.Where(x => x.IsRead == false && x.Receiver.Id == user.Id).Count();
+            ViewBag.TrashCount = _mailContext.Mail.Where(x => x.IsTrash == true && x.ReceiverId == user.Id).Count();
+            ViewBag.DraftCount = _mailContext.Mail.Where(x => x.IsDraft == true && x.ReceiverId == user.Id).Count();
 
 
             return View();

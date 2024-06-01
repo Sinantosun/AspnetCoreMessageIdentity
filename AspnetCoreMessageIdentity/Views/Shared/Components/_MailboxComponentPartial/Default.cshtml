@@ -1,6 +1,8 @@
 ﻿@using AspnetCoreMessageIdentity.DAL.Entities;
 @model List<Mails>
-
+@{
+    string cardCss = "";
+}
 @if (Model.Count > 0)
 {
 
@@ -8,7 +10,7 @@
         <div class="mail-box-header">
 
             <h2>
-                Mesajlarım (16)
+                Mesajlarım (@Model.Count())
             </h2>
             <div class="mail-tools tooltip-demo m-t-md">
                 <div class="btn-group float-right">
@@ -29,22 +31,25 @@
             <table class="table table-hover table-mail">
                 <tbody>
                     @foreach (var item in Model)
-                    {
-                        <tr class="unread">
+                    {@if (item.IsRead)
+                        {
+                            cardCss = "read";
+                        }
+                        else
+                        {
+                            cardCss = "unread";
+                        }
+                        <tr class="@cardCss">
                             <td class="check-mail">
                                 <input type="checkbox" class="i-checks">
                             </td>
-                            <td class="mail-ontact"><a href="mail_detail.html">@item.SenderNameSurname</a></td>
-                            <td class="mail-subject"><a href="mail_detail.html">@item.Subject</a></td>
-                            <td class=""><i class="fa fa-paperclip"></i></td>
-                            @if (DateTime.Now == item.Date)
+                            <td class="mail-ontact"><a href="/MailboxDetail/Index/@item.MailsId">@item.Sender.NameSurname</a></td>
+                            <td class="mail-subject"><a href="/MailboxDetail/Index/@item.MailsId">@item.Subject</a></td>
+                            @if (item.Attachment != null)
                             {
-                                <td class="text-right mail-date">TEST</td>
+                                <td><i class="fa fa-paperclip"></i></td>
                             }
-                            else
-                            {
-                                <td class="text-right mail-date">@item.Date</td>
-                            }
+                            <td class="text-right mail-date">@(((DateTime)item.Date).ToString("f"))</td>
 
                         </tr>
                     }

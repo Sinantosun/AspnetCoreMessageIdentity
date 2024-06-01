@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspnetCoreMessageIdentity.Migrations
 {
     [DbContext(typeof(MailContext))]
-    [Migration("20240531143735_initilzate")]
-    partial class initilzate
+    [Migration("20240601174215_initizate3")]
+    partial class initizate3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,6 +127,23 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.MailTags", b =>
+                {
+                    b.Property<int>("MailTagsID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MailTagsID"));
+
+                    b.Property<string>("TagName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MailTagsID");
+
+                    b.ToTable("MailTags");
+                });
+
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.Mails", b =>
                 {
                     b.Property<int>("MailsId")
@@ -135,6 +152,9 @@ namespace AspnetCoreMessageIdentity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MailsId"));
 
+                    b.Property<string>("Attachment")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -142,19 +162,29 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsDraft")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsImportant")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ReciverNameSurname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsSenderMessageRead")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("SenderNameSurname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsTrash")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MailTagsID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Subject")
                         .IsRequired()
@@ -162,7 +192,30 @@ namespace AspnetCoreMessageIdentity.Migrations
 
                     b.HasKey("MailsId");
 
+                    b.HasIndex("MailTagsID");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
                     b.ToTable("Mail");
+                });
+
+            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.ReplyMails", b =>
+                {
+                    b.Property<int>("ReplyMailsID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MailsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MessageDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ReplyMailsID");
+
+                    b.ToTable("replyMails");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -268,6 +321,44 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.Mails", b =>
+                {
+                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.MailTags", "MailTag")
+                        .WithMany("Mails")
+                        .HasForeignKey("MailTagsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "Receiver")
+                        .WithMany("ReciverMessages")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MailTag");
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.ReplyMails", b =>
+                {
+                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.Mails", "Mails")
+                        .WithMany("ReplyMails")
+                        .HasForeignKey("ReplyMailsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mails");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppRole", null)
@@ -317,6 +408,23 @@ namespace AspnetCoreMessageIdentity.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.AppUser", b =>
+                {
+                    b.Navigation("ReciverMessages");
+
+                    b.Navigation("SentMessages");
+                });
+
+            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.MailTags", b =>
+                {
+                    b.Navigation("Mails");
+                });
+
+            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.Mails", b =>
+                {
+                    b.Navigation("ReplyMails");
                 });
 #pragma warning restore 612, 618
         }

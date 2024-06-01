@@ -19,7 +19,7 @@ namespace AspnetCoreMessageIdentity.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var value = _mailContext.Mail.OrderByDescending(x => x.MailsId).Where(x => x.ReciverNameSurname == user.NameSurname).Take(5).ToList();
+            var value = _mailContext.Mail.OrderByDescending(x => x.MailsId).Where(x => x.ReceiverId == user.Id).Take(5).ToList();
             return View(value);
         }
     }

@@ -1,0 +1,78 @@
+﻿@using AspnetCoreMessageIdentity.Models.MessageModels;
+@model CreateMessageViewModel
+@{
+    ViewData["Title"] = "Composemail";
+    Layout = "~/Views/DefaultLayout/Index.cshtml";
+}
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        @await Component.InvokeAsync("_MailboxSideComponentPartial")
+        <div class="col-lg-9 animated fadeInRight">
+            <div class="mail-box-header">
+                <h2>
+                    Mesaj Gönder
+                </h2>
+            </div>
+            <div class="mail-box">
+                <div class="mail-body">
+                    <small>* işaretli alanları eksiksiz doldurunz.</small>
+                    <br />
+                    <br />
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Email: *</label>
+                            <div class="col-sm-10"><input type="text" asp-for="Email" class="form-control"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Ek dosyası seçiniz</label>
+                            <div class="col-sm-10"><input type="file" asp-for="formFile" class="form-control"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Mesaj kategorisi *</label>
+                            <div class="col-sm-10">  <select asp-for="MailTagsID" asp-items="@ViewBag.MailTag" class="form-control"></select></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Mesaj Başlığı: *</label>
+                            <div class="col-sm-10"><input type="text" asp-for="Subject" class="form-control" value=""></div>
+                        </div>
+                        <br />
+                        <div class="form-group row">
+                            <div class="col-12"> <input id="IsImportantCheckbox" type="checkbox" asp-for="IsImportant" /> &nbsp;  <label for="IsImportantCheckbox" style="font-weight:bold">Önemli Olarak İşaretle  </label> </div>
+                        </div>
+                        <div class="mail-text h-200">
+                            <textarea class="summernote" asp-for="Content" id="summernote"> </textarea>
+                        </div>
+
+                        <div class="mail-body text-right tooltip-demo">
+                            <button asp-action="CreateMessage" asp-controller="Mailbox" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Gönder"><i class="fa fa-reply"></i> Gönder</button>
+                            <button asp-action="MoveMessageToDraftFolder" asp-controller="Mailbox" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Taslak klasörüne taşı"><i class="fa fa-pencil"></i> Taslak</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<script>
+    $('#summernote').summernote({
+        placeholder: 'Mesajınızı Giriniz.',
+
+        height: 300,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ]
+    });
+</script>
+
