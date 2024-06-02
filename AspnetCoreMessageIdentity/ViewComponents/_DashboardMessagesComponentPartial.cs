@@ -2,6 +2,7 @@
 using AspnetCoreMessageIdentity.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AspnetCoreMessageIdentity.ViewComponents
 {
@@ -19,7 +20,7 @@ namespace AspnetCoreMessageIdentity.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var value = _mailContext.Mail.OrderByDescending(x => x.MailsId).Where(x => x.ReceiverId == user.Id).Take(5).ToList();
+            var value = _mailContext.Mail.OrderByDescending(x => x.MailsId).Include(x=>x.Sender).Where(x => x.ReceiverId == user.Id).Take(5).ToList();
             return View(value);
         }
     }

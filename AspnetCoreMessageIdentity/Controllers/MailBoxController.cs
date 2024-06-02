@@ -18,10 +18,12 @@ namespace AspnetCoreMessageIdentity.Controllers
             _mailContext = mailContext;
             _userManager = userManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-
-            return View();
+            var value = await _userManager.FindByNameAsync(User.Identity.Name);
+            ViewBag.UserId1 = value.Id;
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.ForwadMails).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList();
+            return View(MessageList);
         }
         [HttpGet]
         public IActionResult Composemessage()
@@ -59,6 +61,7 @@ namespace AspnetCoreMessageIdentity.Controllers
                     Date = DateTime.Now,
                     IsDraft = createMessageViewModel.IsDraft,
                     IsImportant = createMessageViewModel.IsImportant,
+                    IsForwad = false,
                     IsRead = false,
                     IsSenderMessageRead = false,
                     IsTrash = false,
@@ -145,21 +148,15 @@ namespace AspnetCoreMessageIdentity.Controllers
         [HttpPost]
         public async Task<IActionResult> ForwardMail(ForwadMailViewModel model)
         {
-            var message = _mailContext.Mail.Find(model.MailsId);
+            var message = _mailContext.Mail.Include(x => x.Sender).FirstOrDefault(x => x.MailsId == model.MailsId);
             var Reciveruser = await _userManager.FindByEmailAsync(model.Email);
             var SenderUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            _mailContext.ForwadMails.Add(new ForwadMails
-            {
-                MailsId = model.MailsId,
-                ReciverID = Reciveruser.Id,
-                SenderID = SenderUser.Id,
-            });
 
-
-            _mailContext.Mail.Add(new Mails
+            var addedValue = _mailContext.Mail.Add(new Mails
             {
                 Attachment = message.Attachment,
                 IsRead = message.IsRead,
+                IsForwad = true,
                 IsImportant = message.IsImportant,
                 Content = message.Content,
                 IsDraft = message.IsDraft,
@@ -167,17 +164,47 @@ namespace AspnetCoreMessageIdentity.Controllers
                 IsSenderMessageRead = message.IsSenderMessageRead,
                 IsTrash = message.IsTrash,
                 Subject = message.Subject,
-                ReceiverId=Reciveruser.Id,
-                SenderId=SenderUser.Id,
+                ReceiverId = Reciveruser.Id,
+                SenderId = SenderUser.Id,
                 MailTagsID = message.MailTagsID,
             });
-
-
             _mailContext.SaveChanges();
+
+            _mailContext.ForwadMails.Add(new ForwadMails
+            {
+                MailsId = addedValue.Entity.MailsId,
+                ReciverID = Reciveruser.Id,
+                SenderID = SenderUser.Id,
+                OldUserID = message.Sender.Id
+            });
+            _mailContext.SaveChanges();
+
+
+
             return RedirectToAction("Index");
         }
 
+        public JsonResult ChangeReadAsMark(List<int> items)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                var value = _mailContext.Mail.FirstOrDefault(x => x.MailsId == items[i]);
+                value.IsRead = true;
+                _mailContext.SaveChanges();
+            }
+            return Json("null");
+        }
 
-
+        public JsonResult MoveToTrashFolder(List<int> items)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                var value = _mailContext.Mail.FirstOrDefault(x => x.MailsId == items[i]);
+                value.IsTrash = true;
+                _mailContext.SaveChanges();
+            }
+            return Json("null");
+        }
+     
     }
 }

@@ -21,20 +21,9 @@ namespace AspnetCoreMessageIdentity.ViewComponents
         {
             var value = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewBag.UserId1 = value.Id;
-            var MessageList = _mailContext.Mail.Include(x => x.ForwadMails).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList();
-            foreach (var item in MessageList)
-            {
-                var rtest = item.ForwadMails.FirstOrDefault(x => x.MailsId == 15 && x.ReciverID == value.Id);
-                if (rtest != null)
-                {
-                    ViewBag.FindForwad = rtest;
-                }
-            }
-
-
-
-
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.ForwadMails).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList();
             return View(MessageList);
         }
+
     }
 }

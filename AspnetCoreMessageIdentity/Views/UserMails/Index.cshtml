@@ -1,4 +1,10 @@
-﻿@{
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/DefaultLayout/Index.cshtml";
+}
+
+@{
     ViewData["Title"] = "Mesajlarım";
     Layout = "~/Views/DefaultLayout/Index.cshtml";
 }
@@ -13,7 +19,7 @@
     <div class="row">
 
         @await Component.InvokeAsync("_MailboxSideComponentPartial")
-      
+
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -98,7 +104,7 @@
                 <div class="mail-box-header">
 
                     <h2>
-                        <i class="fa fa-envelope" aria-hidden="true"></i>     @(ViewBag.HeaderTitle == null ? "Mesajlarım" : ViewBag.HeaderTitle) (@Model.Count())
+                        <i class="fa fa-envelope" aria-hidden="true"></i>  Gönderdiğim Mesajlar  (@Model.Count())
                     </h2>
                     <div class="mail-tools tooltip-demo m-t-md">
                         <div class="btn-group float-right">
@@ -107,8 +113,6 @@
 
 
                         </div>
-                        <a href="/Mailbox/Index" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Mesajları yenile"><i class="fa fa-refresh"></i> Yenile</a>
-                        <button onclick="getSelectedCheckboxesForReadMarkFolder()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Okundu olarak işaretle"><i class="fa fa-eye"></i> </button>
                         <button onclick="getSelectedCheckboxesForTrashFolder()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Çöp Kutusuna Taşı"><i class="fa fa-trash-o"></i> </button>
 
                     </div>
@@ -198,7 +202,7 @@
 
         }
 
-       
+
     </div>
 </div>
 
@@ -206,4 +210,5 @@
 
 
 
-    
+
+

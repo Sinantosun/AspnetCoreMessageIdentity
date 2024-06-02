@@ -13,6 +13,7 @@
         public bool IsTrash { get; set; }
         public bool IsDraft { get; set; }
         public bool IsSenderMessageRead { get; set; }
+        public bool IsForwad { get; set; } //iletilme durumunda true olur
 
 
         public int MailTagsID { get; set; }

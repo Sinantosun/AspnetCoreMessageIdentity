@@ -12,5 +12,8 @@
 
         public AppUser SenderUser { get; set; }
         public int SenderID { get; set; }
+
+        public AppUser OldUser { get; set; }
+        public int OldUserID { get; set; }
     }
 }

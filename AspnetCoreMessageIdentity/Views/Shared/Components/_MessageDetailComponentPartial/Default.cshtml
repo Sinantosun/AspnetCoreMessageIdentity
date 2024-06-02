@@ -1,6 +1,7 @@
 ﻿@using AspnetCoreMessageIdentity.DAL.Entities;
 @model Mails
 
+
 <div class="col-lg animated fadeInRight" id="mail-body">
     <div class="mail-box-header">
         <h2>
@@ -13,17 +14,14 @@
             <h5>
 
                 <span class="float-right font-normal"> @Model.Date.ToString("dd MMM yyyy") @Model.Date.ToString("hh:mm")</span>
-                @if (ViewBag.FindForwad == null)
+                @if (!Model.IsForwad)
                 {
                     <span class="font-normal">Kimden:  @Model.Sender.Email </span>
                 }
                 else
                 {
+                    <span class="text-right mail-date">Mail adresi <span style="font-weight:bold">@ViewBag.Detail.SenderUser.Email</span></span>
                     <br />
-                    <span class="text-right mail-date">Mail adresi <span style="font-weight:bold">@ViewBag.FindForwad.SenderUser</span></span>
-                    <br />
-                    <span class="text-right mail-date">Bu mesaj size <span style="text-transform:capitalize; font-weight:bold">@ViewBag.FindForwad.SenderUser.NameSurname</span> tarafından iletildi. </span>
-
                 }
             </h5>
         </div>
@@ -39,26 +37,22 @@
         {
             <div class="mail-attachment">
                 <p>
-                    <span><i class="fa fa-paperclip"></i> 2 attachments - </span>
+                    <span><i class="fa fa-paperclip"></i> Ekli Dosya </span>
                 </p>
-
                 <div class="attachment">
                     <div class="file-box">
                         <div class="file">
-                            <a href="#">
+                            <a href="@Model.Attachment" download>
                                 <span class="corner"></span>
-
                                 <div class="icon">
                                     <i class="fa fa-file"></i>
                                 </div>
                                 <div class="file-name">
                                     @Model.Attachment
                                     <br />
-                                    <small>Added: Jan 11, 2014</small>
                                 </div>
                             </a>
                         </div>
-
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -68,14 +62,24 @@
         @if (ViewBag.FindReplay != null)
         {
             <p style="margin-left:15px" class="mt-2 p-2"><i class="fa fa-info-circle text-info" aria-hidden="true"></i> Bu mesajı @ViewBag.FindReplay.MessageReplyDate.ToString("f") tarihinde yanıtladınız.</p>
-            <br />
             @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=Model.MailsId})
         }
         else
         {
             <p style="margin-left:15px" class="mt-2 p-2">Bu mesajı henüz yanıtlamadınız</p>
         }
-        @if (TempData["ShowButtons"] == null)
+        @if (Model.IsForwad)
+        {
+            @if (ViewBag.Detail != null)
+            {
+
+                <span style="margin-left:15px" class="mt-1 p-2 mb-3">Bu mesaj <span style="text-transform:capitalize; font-weight:bold;">@ViewBag.Detail.OldUser.NameSurname</span>  tarafından <span style="text-transform:capitalize; font-weight:bold;"> @ViewBag.Detail.SenderUser.NameSurname</span>   tarafına <span style="text-transform:capitalize; font-weight:bold;">  @ViewBag.Detail.SenderUser.NameSurname </span>  tarafından da size iletilmiştir.</span>
+                <br />
+                <br />
+              
+            }
+        }
+        @if (TempData["test"] == null)
         {
             <div class="mail-body text-right tooltip-demo">
 

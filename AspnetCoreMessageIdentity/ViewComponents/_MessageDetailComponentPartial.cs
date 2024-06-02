@@ -21,8 +21,10 @@ namespace AspnetCoreMessageIdentity.ViewComponents
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewBag.UserId = user.Id;
             var value = _context.Mail.Include(x => x.Sender).Include(x => x.ReplyMails).Include(x => x.ForwadMails).FirstOrDefault(x => x.MailsId == id);
-            ViewBag.FindReplay = _context.replyMails.Include(x => x.AppUserReciver).Include(t => t.Mails).Where(x => x.MailsId == id && x.AppUserId == user.Id).FirstOrDefault();
-            ViewBag.FindForwad = _context.ForwadMails.Include(x => x.Mails).Include(x => x.SenderUser).Where(x => x.MailsId == id && x.ReciverID == user.Id).FirstOrDefault();
+            ViewBag.Detail = _context.ForwadMails.Include(x => x.SenderUser).Include(t => t.OldUser).Where(x => x.MailsId == id && x.ReciverID == user.Id).FirstOrDefault();
+            value.IsRead = true;
+            value.IsSenderMessageRead = true;
+            _context.SaveChanges();
             return View(value);
         }
     }

@@ -38,6 +38,10 @@ namespace AspnetCoreMessageIdentity.DAL.Context
             builder.Entity<ForwadMails>()
         .HasOne(m => m.SenderUser).WithMany(u => u.ForwardSender).HasForeignKey(x => x.SenderID).OnDelete(DeleteBehavior.Restrict);
 
+
+            builder.Entity<ForwadMails>()
+        .HasOne(m => m.OldUser).WithMany(u => u.ForwadOldUser).HasForeignKey(x => x.OldUserID).OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

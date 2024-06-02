@@ -4,6 +4,7 @@ using AspnetCoreMessageIdentity.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspnetCoreMessageIdentity.Migrations
 {
     [DbContext(typeof(MailContext))]
-    partial class MailContextModelSnapshot : ModelSnapshot
+    [Migration("20240602093502_test1")]
+    partial class test1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,9 +138,6 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.Property<int>("MailsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("OldUserID")
-                        .HasColumnType("int");
-
                     b.Property<int>("ReciverID")
                         .HasColumnType("int");
 
@@ -147,8 +147,6 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.HasKey("ForwadMailsID");
 
                     b.HasIndex("MailsId");
-
-                    b.HasIndex("OldUserID");
 
                     b.HasIndex("ReciverID");
 
@@ -375,12 +373,6 @@ namespace AspnetCoreMessageIdentity.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "OldUser")
-                        .WithMany("ForwadOldUser")
-                        .HasForeignKey("OldUserID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "ReciverUser")
                         .WithMany("ForwardReciver")
                         .HasForeignKey("ReciverID")
@@ -394,8 +386,6 @@ namespace AspnetCoreMessageIdentity.Migrations
                         .IsRequired();
 
                     b.Navigation("Mails");
-
-                    b.Navigation("OldUser");
 
                     b.Navigation("ReciverUser");
 
@@ -501,8 +491,6 @@ namespace AspnetCoreMessageIdentity.Migrations
 
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.AppUser", b =>
                 {
-                    b.Navigation("ForwadOldUser");
-
                     b.Navigation("ForwardReciver");
 
                     b.Navigation("ForwardSender");

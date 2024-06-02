@@ -12,5 +12,6 @@ namespace AspnetCoreMessageIdentity.DAL.Entities
 
         public List<ForwadMails> ForwardReciver { get; set; }
         public List<ForwadMails> ForwardSender { get; set; }
+        public List<ForwadMails> ForwadOldUser { get; set; }
     }
 }
