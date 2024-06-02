@@ -1,8 +1,9 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "UserTrashMails";
     Layout = "~/Views/DefaultLayout/Index.cshtml";
 }
+
 
 
 @using AspnetCoreMessageIdentity.DAL.Entities;
@@ -40,26 +41,6 @@
                     });
                 });
             });
-            function getSelectedCheckboxesForReadMarkFolder() {
-
-                var checkboxes = document.querySelectorAll('input[name="MarkChekbox"]:checked');
-                var selected = [];
-                checkboxes.forEach((checkbox) => {
-                    selected.push(checkbox.value);
-                });
-
-                $.ajax({
-                    url: '/Mailbox/ChangeReadAsMark',
-                    method: 'post',
-                    data: { items: selected },
-                    success: function () {
-                        window.location.reload(true);
-                    }
-                });
-
-
-            }
-
 
             function getSelectedCheckboxesForTrashFolder() {
                 Swal.fire({
@@ -101,7 +82,7 @@
                 <div class="mail-box-header">
 
                     <h2>
-                        <i class="fa fa-envelope" aria-hidden="true"></i>  Gönderdiğim Mesajlar  (@Model.Count())
+                        <i class="fa fa-envelope" aria-hidden="true"></i>  Çöp Kutusu (@Model.Count())
                     </h2>
                     <div class="mail-tools tooltip-demo m-t-md">
                         <div class="btn-group float-right">
@@ -110,8 +91,10 @@
 
 
                         </div>
-                        <button onclick="getSelectedCheckboxesForTrashFolder()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Çöp Kutusuna Taşı"><i class="fa fa-trash-o"></i> </button>
-
+                        <a href="/Mailbox/UserDraftMails" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Çöp kutusunu yenile"><i class="fa fa-refresh"></i> Yenile</a>
+                        <a href="/Mailbox/UserDraftMails" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Seçilen mesajları geri yükle"><i class="fa fa-history"></i> Geri Yükle</a>
+                        <button onclick="getSelectedCheckboxesForTrashFolder()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Tüm mesajları sil"><i class="fa fa-trash-o"></i> </button>
+                        <button onclick="getSelectedCheckboxesForTrashFolder()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Seçilenleri Sil"><i class="fa fa-trash"></i> </button>
                     </div>
 
                 </div>
@@ -146,8 +129,9 @@
                                     <td class="check-mail">
                                         <input type="checkbox" name="MarkChekbox" value="@item.MailsId" class="i-checks checkbox">
                                     </td>
-                                    <td class="mail-ontact"><i class="fa fa-user text-primary" aria-hidden="true"></i> <a style="text-transform:capitalize" href="/MailboxDetail/Index/@item.MailsId">&nbsp; @item.Sender.NameSurname</a><span class="label @TagCss float-right">@item.MailTag.TagName</span></td>
-                                    <td class="mail-subject"><a href="/MailboxDetail/Index/@item.MailsId"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp; @(item.Subject.Length > 20 ? item.Subject.Substring(0, 20) + "..." : item.Subject)</a></td>
+
+                                    <td class="mail-ontact"><i class="fa fa-user text-primary" aria-hidden="true"></i> <a style="text-transform:capitalize" href="/MailboxDetail/Index/@item.MailsId?ut=true">&nbsp; @item.Sender.NameSurname</a><span class="label @TagCss float-right">@item.MailTag.TagName</span></td>
+                                    <td class="mail-subject"><a href="/MailboxDetail/Index/@item.MailsId?ut=true"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp; @(item.Subject.Length > 20 ? item.Subject.Substring(0, 20) + "..." : item.Subject)</a></td>
                                     @if (item.Attachment != null)
                                     {
                                         <td><i class="fa fa-paperclip"></i></td>
@@ -190,7 +174,7 @@
                 <div class="mail-box-header">
 
                     <h2>
-                        Henüz Hiç Mesajınız yok
+                       Bu klasör boş
                     </h2>
                 </div>
             </div>
@@ -202,6 +186,11 @@
 
     </div>
 </div>
+
+
+
+
+
 
 
 

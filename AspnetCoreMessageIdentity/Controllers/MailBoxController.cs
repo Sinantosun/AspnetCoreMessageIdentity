@@ -205,6 +205,44 @@ namespace AspnetCoreMessageIdentity.Controllers
             }
             return Json("null");
         }
-     
+
+        public async Task<IActionResult> UserMails()
+        {
+            var value = await _userManager.FindByNameAsync(User.Identity.Name);
+            ViewBag.UserId1 = value.Id;
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.ForwadMails).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.SenderId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList();
+
+
+            return View(MessageList);
+        }
+
+        public async Task<IActionResult> UserImportantMails()
+        {
+            var value = await _userManager.FindByNameAsync(User.Identity.Name);
+            ViewBag.UserId1 = value.Id;
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.ForwadMails).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false && x.IsImportant == true).ToList();
+
+
+            return View(MessageList);
+        }
+
+        public async Task<IActionResult> UserDraftMails()
+        {
+            var value = await _userManager.FindByNameAsync(User.Identity.Name);
+            ViewBag.UserId1 = value.Id;
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.ForwadMails).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.SenderId == value.Id && x.IsTrash == false && x.IsDraft == true).ToList();
+
+
+            return View(MessageList);
+        }
+        public async Task<IActionResult> UserTrashMails()
+        {
+            var value = await _userManager.FindByNameAsync(User.Identity.Name);
+            ViewBag.UserId1 = value.Id;
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.ForwadMails).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == true && x.IsDraft == false).ToList();
+
+
+            return View(MessageList);
+        }
     }
 }
