@@ -72,15 +72,21 @@
                         </div>
                     </div>
                 }
-                <hr />
+               
                 @if (ViewBag.FindReplay != null)
                 {
+                    <hr />
                     <p style="margin-left:15px" class="mt-2 p-2"><i class="fa fa-info-circle text-info" aria-hidden="true"></i> Bu mesajı @ViewBag.FindReplay.MessageReplyDate.ToString("f") tarihinde yanıtladınız.</p>
                     @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=Model.MailsId})
                 }
                 else
-                {
-                    <p style="margin-left:15px" class="mt-2 p-2">Bu mesajı henüz yanıtlamadınız</p>
+                { 
+                    @if (TempData["ShowButtons"] == null)
+                    {
+                        <p style="margin-left:15px" class="mt-2 p-2">Bu mesajı henüz yanıtlamadınız</p>
+                       
+                    }
+                   
                 }
                 @if (Model.IsForwad)
                 {

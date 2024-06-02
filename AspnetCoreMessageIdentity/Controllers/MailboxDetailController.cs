@@ -31,6 +31,7 @@ namespace AspnetCoreMessageIdentity.Controllers
             ViewBag.Detail = _context.ForwadMails.Include(x => x.SenderUser).Include(t => t.OldUser).Where(x => x.MailsId == id && x.ReciverID == user.Id).FirstOrDefault();
             value.IsRead = true;
             value.IsSenderMessageRead = true;
+            //yanıtlayan kişi yanıtlanacak kişi
             _context.SaveChanges();
             return View(value);
         }
