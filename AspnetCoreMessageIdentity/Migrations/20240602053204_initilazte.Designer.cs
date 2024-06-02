@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspnetCoreMessageIdentity.Migrations
 {
     [DbContext(typeof(MailContext))]
-    [Migration("20240601174215_initizate3")]
-    partial class initizate3
+    [Migration("20240602053204_initilazte")]
+    partial class initilazte
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -204,7 +204,10 @@ namespace AspnetCoreMessageIdentity.Migrations
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.ReplyMails", b =>
                 {
                     b.Property<int>("ReplyMailsID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReplyMailsID"));
 
                     b.Property<int>("MailsId")
                         .HasColumnType("int");
@@ -213,7 +216,20 @@ namespace AspnetCoreMessageIdentity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("MessageReplyDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReplyReciverId")
+                        .HasColumnType("int");
+
                     b.HasKey("ReplyMailsID");
+
+                    b.HasIndex("MailsId");
+
+                    b.HasIndex("ReplyReciverId");
 
                     b.ToTable("replyMails");
                 });
@@ -352,11 +368,19 @@ namespace AspnetCoreMessageIdentity.Migrations
                 {
                     b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.Mails", "Mails")
                         .WithMany("ReplyMails")
-                        .HasForeignKey("ReplyMailsID")
+                        .HasForeignKey("MailsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "ReplyReciver")
+                        .WithMany()
+                        .HasForeignKey("ReplyReciverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Mails");
+
+                    b.Navigation("ReplyReciver");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

@@ -39,7 +39,9 @@
                         </div>
                     </form>
                     <div style="display:flex; justify-content:center; align-items:center;" class="form-group row">
-                        <h1>Yanıtlanacak Mesaj Detayı</h1>
+                        <h3>Yanıtlayacağınız Mesaj Detayı</h3>
+                    </div>
+                    <div style="display:flex; justify-content:center; align-items:center;" class="form-group row">
                         <br />
                         @await Component.InvokeAsync("_MessageDetailComponentPartial",new {@id=Model.MailsID})
                     </div>
@@ -62,7 +64,7 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 <script>
     $('#summernote').summernote({
-        placeholder: 'Mesajınızı Giriniz.',
+        placeholder: 'Mesajınızı Giriniz. *',
 
         height: 300,
         toolbar: [

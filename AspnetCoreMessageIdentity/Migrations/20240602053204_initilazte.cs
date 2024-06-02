@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AspnetCoreMessageIdentity.Migrations
 {
     /// <inheritdoc />
-    public partial class initizate2 : Migration
+    public partial class initilazte : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -217,18 +217,29 @@ namespace AspnetCoreMessageIdentity.Migrations
                 name: "replyMails",
                 columns: table => new
                 {
-                    ReplyMailsID = table.Column<int>(type: "int", nullable: false),
+                    ReplyMailsID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     MailsId = table.Column<int>(type: "int", nullable: false),
-                    MessageDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    MessageDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MessageReplyDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReplyReciverId = table.Column<int>(type: "int", nullable: false),
+                    ReceiverId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_replyMails", x => x.ReplyMailsID);
                     table.ForeignKey(
-                        name: "FK_replyMails_Mail_ReplyMailsID",
-                        column: x => x.ReplyMailsID,
+                        name: "FK_replyMails_AspNetUsers_ReplyReciverId",
+                        column: x => x.ReplyReciverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_replyMails_Mail_MailsId",
+                        column: x => x.MailsId,
                         principalTable: "Mail",
-                        principalColumn: "MailsId");
+                        principalColumn: "MailsId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -284,6 +295,16 @@ namespace AspnetCoreMessageIdentity.Migrations
                 name: "IX_Mail_SenderId",
                 table: "Mail",
                 column: "SenderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_replyMails_MailsId",
+                table: "replyMails",
+                column: "MailsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_replyMails_ReplyReciverId",
+                table: "replyMails",
+                column: "ReplyReciverId");
         }
 
         /// <inheritdoc />

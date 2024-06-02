@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspnetCoreMessageIdentity.Migrations
 {
     [DbContext(typeof(MailContext))]
-    [Migration("20240601173943_initizate2")]
-    partial class initizate2
+    [Migration("20240602072857_migration_test111")]
+    partial class migration_test111
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,6 +127,34 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.ForwadMails", b =>
+                {
+                    b.Property<int>("ForwadMailsID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ForwadMailsID"));
+
+                    b.Property<int>("MailsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReciverID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SenderID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ForwadMailsID");
+
+                    b.HasIndex("MailsId");
+
+                    b.HasIndex("ReciverID");
+
+                    b.HasIndex("SenderID");
+
+                    b.ToTable("ForwadMails");
+                });
+
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.MailTags", b =>
                 {
                     b.Property<int>("MailTagsID")
@@ -204,6 +232,12 @@ namespace AspnetCoreMessageIdentity.Migrations
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.ReplyMails", b =>
                 {
                     b.Property<int>("ReplyMailsID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReplyMailsID"));
+
+                    b.Property<int>("AppUserId")
                         .HasColumnType("int");
 
                     b.Property<int>("MailsId")
@@ -213,7 +247,14 @@ namespace AspnetCoreMessageIdentity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("MessageReplyDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("ReplyMailsID");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("MailsId");
 
                     b.ToTable("replyMails");
                 });
@@ -321,6 +362,33 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.ForwadMails", b =>
+                {
+                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.Mails", "Mails")
+                        .WithMany("ForwadMails")
+                        .HasForeignKey("MailsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "ReciverUser")
+                        .WithMany("ForwardReciver")
+                        .HasForeignKey("ReciverID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "SenderUser")
+                        .WithMany("ForwardSender")
+                        .HasForeignKey("SenderID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Mails");
+
+                    b.Navigation("ReciverUser");
+
+                    b.Navigation("SenderUser");
+                });
+
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.Mails", b =>
                 {
                     b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.MailTags", "MailTag")
@@ -350,11 +418,19 @@ namespace AspnetCoreMessageIdentity.Migrations
 
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.ReplyMails", b =>
                 {
+                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "AppUserReciver")
+                        .WithMany("replyMails")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.Mails", "Mails")
                         .WithMany("ReplyMails")
-                        .HasForeignKey("ReplyMailsID")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasForeignKey("MailsId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("AppUserReciver");
 
                     b.Navigation("Mails");
                 });
@@ -412,9 +488,15 @@ namespace AspnetCoreMessageIdentity.Migrations
 
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.AppUser", b =>
                 {
+                    b.Navigation("ForwardReciver");
+
+                    b.Navigation("ForwardSender");
+
                     b.Navigation("ReciverMessages");
 
                     b.Navigation("SentMessages");
+
+                    b.Navigation("replyMails");
                 });
 
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.MailTags", b =>
@@ -424,6 +506,8 @@ namespace AspnetCoreMessageIdentity.Migrations
 
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.Mails", b =>
                 {
+                    b.Navigation("ForwadMails");
+
                     b.Navigation("ReplyMails");
                 });
 #pragma warning restore 612, 618

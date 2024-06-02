@@ -66,6 +66,7 @@ namespace AspnetCoreMessageIdentity.Controllers
                     Subject = createMessageViewModel.Subject,
                     ReceiverId = ReciverUser.Id,
                     SenderId = SenderUser.Id,
+
                     Attachment = createMessageViewModel.Attachment,
                 });
                 _mailContext.SaveChanges();
@@ -94,11 +95,10 @@ namespace AspnetCoreMessageIdentity.Controllers
         [HttpGet]
         public async Task<IActionResult> ReplayMail(int id)
         {
-            var value = _mailContext.Mail.Include(x=>x.Receiver).FirstOrDefault(x => x.MailsId == id);
+            var value = _mailContext.Mail.Include(x => x.Receiver).FirstOrDefault(x => x.MailsId == id);
 
             ReplayMailViewModel replayMailViewModel = new ReplayMailViewModel()
             {
-                Description = value.Content,
                 Email = value.Receiver.Email,
                 MailsID = value.MailsId,
             };
@@ -106,19 +106,77 @@ namespace AspnetCoreMessageIdentity.Controllers
             return View(replayMailViewModel);
         }
         [HttpPost]
-        public IActionResult ReplayMail(ReplayMailViewModel replayMailViewModel)
+        public async Task<IActionResult> ReplayMail(ReplayMailViewModel replayMailViewModel)
         {
-
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             _mailContext.replyMails.Add(new ReplyMails
             {
-                MailsId=replayMailViewModel.MailsID,
-                MessageDescription=replayMailViewModel.Description,
-                
+                MailsId = replayMailViewModel.MailsID,
+                MessageDescription = replayMailViewModel.Description,
+                MessageReplyDate = DateTime.Now,
+                AppUserId = user.Id,//MESAJI YANITLAYAN KİŞİNİN İD DEĞERİ
+
             });
             _mailContext.SaveChanges();
             return RedirectToAction("Index");
 
         }
+
+        public IActionResult MoveMessageToTrashFolder(int id)
+        {
+            var value = _mailContext.Mail.Find(id);
+            value.IsTrash = true;
+            _mailContext.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult ForwardMail(int id)
+        {
+            var message = _mailContext.Mail.Find(id);
+            ForwadMailViewModel forwadMailViewModel = new ForwadMailViewModel()
+            {
+                Content = message.Content,
+                MailsId = message.MailsId,
+            };
+
+            return View(forwadMailViewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ForwardMail(ForwadMailViewModel model)
+        {
+            var message = _mailContext.Mail.Find(model.MailsId);
+            var Reciveruser = await _userManager.FindByEmailAsync(model.Email);
+            var SenderUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            _mailContext.ForwadMails.Add(new ForwadMails
+            {
+                MailsId = model.MailsId,
+                ReciverID = Reciveruser.Id,
+                SenderID = SenderUser.Id,
+            });
+
+
+            _mailContext.Mail.Add(new Mails
+            {
+                Attachment = message.Attachment,
+                IsRead = message.IsRead,
+                IsImportant = message.IsImportant,
+                Content = message.Content,
+                IsDraft = message.IsDraft,
+                Date = message.Date,
+                IsSenderMessageRead = message.IsSenderMessageRead,
+                IsTrash = message.IsTrash,
+                Subject = message.Subject,
+                ReceiverId=Reciveruser.Id,
+                SenderId=SenderUser.Id,
+                MailTagsID = message.MailTagsID,
+            });
+
+
+            _mailContext.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
 
 
     }

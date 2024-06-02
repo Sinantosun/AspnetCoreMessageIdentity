@@ -1,6 +1,7 @@
 ﻿@using AspnetCoreMessageIdentity.DAL.Entities;
 @model Mails
-<div class="col-lg-9 animated fadeInRight" id="mail-body">
+
+<div class="col-lg animated fadeInRight" id="mail-body">
     <div class="mail-box-header">
         <h2>
             Mesaj Detayı
@@ -10,9 +11,20 @@
                 <span class="font-normal">Konu: </span>@Model.Subject
             </h3>
             <h5>
-                <span class="float-right font-normal">10:15AM 02 FEB 2014</span>
-                <span class="float-right font-normal">@Model.Date.ToString("hh:mm") @Model.Date.ToString("dd/MM/YYYY")</span>
-                <span class="font-normal">Kimden: </span>@Model.Sender.Email
+
+                <span class="float-right font-normal"> @Model.Date.ToString("dd MMM yyyy") @Model.Date.ToString("hh:mm")</span>
+                @if (ViewBag.FindForwad == null)
+                {
+                    <span class="font-normal">Kimden:  @Model.Sender.Email </span>
+                }
+                else
+                {
+                    <br />
+                    <span class="text-right mail-date">Mail adresi <span style="font-weight:bold">@ViewBag.FindForwad.SenderUser</span></span>
+                    <br />
+                    <span class="text-right mail-date">Bu mesaj size <span style="text-transform:capitalize; font-weight:bold">@ViewBag.FindForwad.SenderUser.NameSurname</span> tarafından iletildi. </span>
+
+                }
             </h5>
         </div>
     </div>
@@ -22,6 +34,7 @@
         <div class="mail-body">
             @Html.Raw(Model.Content)
         </div>
+
         @if (Model.Attachment != null)
         {
             <div class="mail-attachment">
@@ -51,18 +64,58 @@
                 </div>
             </div>
         }
+        <hr />
+        @if (ViewBag.FindReplay != null)
+        {
+            <p style="margin-left:15px" class="mt-2 p-2"><i class="fa fa-info-circle text-info" aria-hidden="true"></i> Bu mesajı @ViewBag.FindReplay.MessageReplyDate.ToString("f") tarihinde yanıtladınız.</p>
+            <br />
+            @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=Model.MailsId})
+        }
+        else
+        {
+            <p style="margin-left:15px" class="mt-2 p-2">Bu mesajı henüz yanıtlamadınız</p>
+        }
         @if (TempData["ShowButtons"] == null)
         {
             <div class="mail-body text-right tooltip-demo">
-                <a class="btn btn-sm btn-white" href="/Mailbox/ReplayMail/@Model.MailsId"><i class="fa fa-reply"></i> Yanıtla</a>
-                <a class="btn btn-sm btn-white" href="mail_compose.html"><i class="fa fa-arrow-right"></i> İlet</a>
-                <button title="" data-placement="top" onclick="printPage('mail-body')" data-toggle="tooltip" type="button" data-original-title="Print" class="btn btn-sm btn-white"><i class="fa fa-print"></i> Yazdır</button>
-                <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm btn-white"><i class="fa fa-trash-o"></i> Çöp Kutusuna taşı</button>
+
+                @if (ViewBag.FindReplay == null)
+                {
+                    <a title="Mesajı Yanıtla" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Mesajı Yanıtla" class="btn btn-sm btn-white" href="/Mailbox/ReplayMail/@Model.MailsId"><i class="fa fa-reply"></i> Yanıtla</a>
+                    @if (ViewBag.FindForwad == null)
+                    {
+                        <a title="Mesajı İlet" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white" href="/Mailbox/ForwardMail/@Model.MailsId"><i class="fa fa-arrow-right"></i> İlet</a>
+                    }
+
+                }
+
+                <button title="Yazdır" data-placement="top" onclick="printPage('mail-body')" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white"><i class="fa fa-print"></i> Yazdır</button>
+                <a title="Çöp kutusuna taşı" onclick="MoveTrashFolder(@Model.MailsId)" data-placement="top" data-toggle="tooltip" data-original-title="Çöp kutusuna taşı" class="btn btn-sm btn-white"><i class="fa fa-trash-o"></i> Çöp Kutusuna taşı</a>
             </div>
+
         }
-       
+
         <div class="clearfix"></div>
 
 
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function MoveTrashFolder(id) {
+        Swal.fire({
+            title: "Emin Misiniz?",
+            text: "Bu mesajı çöp kutusuna taşımak istiyor musunuz?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Evet",
+            cancelButtonText: "Vazgeç"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/Mailbox/MoveMessageToTrashFolder/' + id;
+            }
+        });
+    }
+</script>

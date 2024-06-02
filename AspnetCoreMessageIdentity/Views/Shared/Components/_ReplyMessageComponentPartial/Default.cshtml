@@ -1,0 +1,25 @@
+﻿@using AspnetCoreMessageIdentity.DAL.Entities;
+@model ReplyMails
+<div class="col-md-12 animated fadeInRight" id="mail-body">
+    <div class="mail-box-header">
+        <h2>
+            Yanıtınız
+        </h2>
+        <div class="mail-tools tooltip-demo m-t-md">
+            <h3>
+                <span class="font-normal">Konu: </span> @Model.Mails.Subject  - (Yanıt)
+            </h3>
+        </div>
+    </div>
+    <div class="mail-box">
+
+
+        <div class="mail-body">
+            @Html.Raw(Model.MessageDescription)
+        </div>
+        <div class="clearfix"></div>
+
+
+    </div>
+</div>
+

@@ -8,5 +8,9 @@ namespace AspnetCoreMessageIdentity.DAL.Entities
 
         public List<Mails> SentMessages { get; set; }
         public List<Mails> ReciverMessages { get; set; }
+        public List<ReplyMails> replyMails { get; set; }
+
+        public List<ForwadMails> ForwardReciver { get; set; }
+        public List<ForwadMails> ForwardSender { get; set; }
     }
 }
