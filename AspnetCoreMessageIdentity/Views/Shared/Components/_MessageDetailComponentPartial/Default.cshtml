@@ -1,125 +1,85 @@
 ﻿@using AspnetCoreMessageIdentity.DAL.Entities;
 @model Mails
 
+        <div class="col-md-12 animated fadeInRight" id="mail-body">
+            <div class="mail-box-header">
+                <h2>
+                    Mesaj Detayı
+                </h2>
+                <div class="mail-tools tooltip-demo m-t-md">
+                    <h3>
+                        <span class="font-normal">Konu: </span>@Model.Subject
+                    </h3>
+                    <h5>
 
-<div class="col-lg animated fadeInRight" id="mail-body">
-    <div class="mail-box-header">
-        <h2>
-            Mesaj Detayı
-        </h2>
-        <div class="mail-tools tooltip-demo m-t-md">
-            <h3>
-                <span class="font-normal">Konu: </span>@Model.Subject
-            </h3>
-            <h5>
-
-                <span class="float-right font-normal"> @Model.Date.ToString("dd MMM yyyy") @Model.Date.ToString("hh:mm")</span>
-                @if (!Model.IsForwad)
-                {
-                    <span class="font-normal">Kimden:  @Model.Sender.Email </span>
-                }
-                else
-                {
-                    <span class="text-right mail-date">Mail adresi <span style="font-weight:bold">@ViewBag.Detail.SenderUser.Email</span></span>
-                    <br />
-                }
-            </h5>
-        </div>
-    </div>
-    <div class="mail-box">
-
-
-        <div class="mail-body">
-            @Html.Raw(Model.Content)
-        </div>
-
-        @if (Model.Attachment != null)
-        {
-            <div class="mail-attachment">
-                <p>
-                    <span><i class="fa fa-paperclip"></i> Ekli Dosya </span>
-                </p>
-                <div class="attachment">
-                    <div class="file-box">
-                        <div class="file">
-                            <a href="@Model.Attachment" download>
-                                <span class="corner"></span>
-                                <div class="icon">
-                                    <i class="fa fa-file"></i>
-                                </div>
-                                <div class="file-name">
-                                    @Model.Attachment
-                                    <br />
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
+                        <span class="float-right font-normal"> @Model.Date.ToString("dd MMM yyyy") @Model.Date.ToString("t")</span>
+                        @if (!Model.IsForwad)
+                        {
+                            <span class="font-normal">Kimden:  @Model.Sender.Email </span>
+                        }
+                        else
+                        {
+                            <span class="text-right mail-date">Mail adresi <span style="font-weight:bold">@Model.Sender.Email</span></span>
+                            <br />
+                        }
+                    </h5>
                 </div>
             </div>
-        }
-        <hr />
-        @if (ViewBag.FindReplay != null)
-        {
-            <p style="margin-left:15px" class="mt-2 p-2"><i class="fa fa-info-circle text-info" aria-hidden="true"></i> Bu mesajı @ViewBag.FindReplay.MessageReplyDate.ToString("f") tarihinde yanıtladınız.</p>
-            @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=Model.MailsId})
-        }
-        else
-        {
-            <p style="margin-left:15px" class="mt-2 p-2">Bu mesajı henüz yanıtlamadınız</p>
-        }
-        @if (Model.IsForwad)
-        {
-            @if (ViewBag.Detail != null)
-            {
+            <div class="mail-box">
 
-                <span style="margin-left:15px" class="mt-1 p-2 mb-3">Bu mesaj <span style="text-transform:capitalize; font-weight:bold;">@ViewBag.Detail.OldUser.NameSurname</span>  tarafından <span style="text-transform:capitalize; font-weight:bold;"> @ViewBag.Detail.SenderUser.NameSurname</span>   tarafına <span style="text-transform:capitalize; font-weight:bold;">  @ViewBag.Detail.SenderUser.NameSurname </span>  tarafından da size iletilmiştir.</span>
-                <br />
-                <br />
-              
-            }
-        }
-        @if (TempData["ShowButtons"] == null)
-        {
-            <div class="mail-body text-right tooltip-demo">
 
-                @if (ViewBag.FindReplay == null)
+                <div class="mail-body">
+                    @Html.Raw(Model.Content)
+                </div>
+
+                @if (Model.Attachment != null)
                 {
-                    <a title="Mesajı Yanıtla" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Mesajı Yanıtla" class="btn btn-sm btn-white" href="/Mailbox/ReplayMail/@Model.MailsId"><i class="fa fa-reply"></i> Yanıtla</a>
-                    @if (ViewBag.FindForwad == null)
-                    {
-                        <a title="Mesajı İlet" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white" href="/Mailbox/ForwardMail/@Model.MailsId"><i class="fa fa-arrow-right"></i> İlet</a>
-                    }
-
+                    <div class="mail-attachment">
+                        <p>
+                            <span><i class="fa fa-paperclip"></i> Ekli Dosya </span>
+                        </p>
+                        <div class="attachment">
+                            <div class="file-box">
+                                <div class="file">
+                                    <a href="@Model.Attachment" download>
+                                        <span class="corner"></span>
+                                        <div class="icon">
+                                            <i class="fa fa-file"></i>
+                                        </div>
+                                        <div class="file-name">
+                                            @Model.Attachment
+                                            <br />
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
                 }
 
-                <button title="Yazdır" data-placement="top" onclick="printPage('mail-body')" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white"><i class="fa fa-print"></i> Yazdır</button>
-                <a title="Çöp kutusuna taşı" onclick="MoveTrashFolder(@Model.MailsId)" data-placement="top" data-toggle="tooltip" data-original-title="Çöp kutusuna taşı" class="btn btn-sm btn-white"><i class="fa fa-trash-o"></i> Çöp Kutusuna taşı</a>
+                <div class="clearfix"></div>
+
+
             </div>
-
-        }
-
-        <div class="clearfix"></div>
-
-
-    </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    function MoveTrashFolder(id) {
-        Swal.fire({
-            title: "Emin Misiniz?",
-            text: "Bu mesajı çöp kutusuna taşımak istiyor musunuz?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Evet",
-            cancelButtonText: "Vazgeç"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = '/Mailbox/MoveMessageToTrashFolder/' + id;
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            function MoveTrashFolder(id) {
+                Swal.fire({
+                    title: "Emin Misiniz?",
+                    text: "Bu mesajı çöp kutusuna taşımak istiyor musunuz?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Evet",
+                    cancelButtonText: "Vazgeç"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/Mailbox/MoveMessageToTrashFolder/' + id;
+                    }
+                });
             }
-        });
-    }
-</script>
+        </script>
+

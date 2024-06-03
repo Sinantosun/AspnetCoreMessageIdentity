@@ -163,9 +163,17 @@
                                     {
                                         <td></td>
                                     }
+                                    @if (item.IsReply)
+                                    {
+                                        <td class="text-right mail-date">Yanıtlandı</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
                                     @if (item.IsForwad)
                                     {
-                                        <td class="text-right mail-date"><span style="text-transform:capitalize; font-weight:bold">@item.Sender.NameSurname</span> tarafından iletildi.</td>
+                                        <td class="text-right mail-date"><span style="text-transform:capitalize; font-weight:bold">@item.Receiver.NameSurname</span> tarafından iletildi.</td>
                                     }
                                     else
                                     {
@@ -175,11 +183,8 @@
 
                                 </tr>
                             }
-
                         </tbody>
                     </table>
-
-
                 </div>
             </div>
         }
@@ -193,9 +198,6 @@
                     </h2>
                 </div>
             </div>
-
-
-
         }
 
        

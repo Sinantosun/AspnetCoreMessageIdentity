@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AspnetCoreMessageIdentity.Migrations
 {
     /// <inheritdoc />
-    public partial class initilazte : Migration
+    public partial class initilizate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -186,14 +186,24 @@ namespace AspnetCoreMessageIdentity.Migrations
                     IsRead = table.Column<bool>(type: "bit", nullable: false),
                     IsTrash = table.Column<bool>(type: "bit", nullable: false),
                     IsDraft = table.Column<bool>(type: "bit", nullable: false),
-                    IsSenderMessageRead = table.Column<bool>(type: "bit", nullable: false),
+                    ForwadDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsForwad = table.Column<bool>(type: "bit", nullable: false),
+                    IsReplyDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsReply = table.Column<bool>(type: "bit", nullable: false),
                     MailTagsID = table.Column<int>(type: "int", nullable: false),
                     SenderId = table.Column<int>(type: "int", nullable: false),
-                    ReceiverId = table.Column<int>(type: "int", nullable: false)
+                    ReceiverId = table.Column<int>(type: "int", nullable: false),
+                    OldUserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mail", x => x.MailsId);
+                    table.ForeignKey(
+                        name: "FK_Mail_AspNetUsers_OldUserId",
+                        column: x => x.OldUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Mail_AspNetUsers_ReceiverId",
                         column: x => x.ReceiverId,
@@ -204,42 +214,14 @@ namespace AspnetCoreMessageIdentity.Migrations
                         name: "FK_Mail_AspNetUsers_SenderId",
                         column: x => x.SenderId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Mail_MailTags_MailTagsID",
                         column: x => x.MailTagsID,
                         principalTable: "MailTags",
                         principalColumn: "MailTagsID",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "replyMails",
-                columns: table => new
-                {
-                    ReplyMailsID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MailsId = table.Column<int>(type: "int", nullable: false),
-                    MessageDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MessageReplyDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ReplyReciverId = table.Column<int>(type: "int", nullable: false),
-                    ReceiverId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_replyMails", x => x.ReplyMailsID);
-                    table.ForeignKey(
-                        name: "FK_replyMails_AspNetUsers_ReplyReciverId",
-                        column: x => x.ReplyReciverId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_replyMails_Mail_MailsId",
-                        column: x => x.MailsId,
-                        principalTable: "Mail",
-                        principalColumn: "MailsId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -287,6 +269,11 @@ namespace AspnetCoreMessageIdentity.Migrations
                 column: "MailTagsID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Mail_OldUserId",
+                table: "Mail",
+                column: "OldUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Mail_ReceiverId",
                 table: "Mail",
                 column: "ReceiverId");
@@ -295,16 +282,6 @@ namespace AspnetCoreMessageIdentity.Migrations
                 name: "IX_Mail_SenderId",
                 table: "Mail",
                 column: "SenderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_replyMails_MailsId",
-                table: "replyMails",
-                column: "MailsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_replyMails_ReplyReciverId",
-                table: "replyMails",
-                column: "ReplyReciverId");
         }
 
         /// <inheritdoc />
@@ -326,13 +303,10 @@ namespace AspnetCoreMessageIdentity.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "replyMails");
+                name: "Mail");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Mail");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

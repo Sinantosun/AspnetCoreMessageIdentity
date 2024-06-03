@@ -5,6 +5,7 @@ namespace AspnetCoreMessageIdentity.Models.MessageModels
 {
     public class CreateMessageViewModel
     {
+        public int MailsID { get; set; }
         public string Subject { get; set; }
         public string Email { get; set; }
         public string Content { get; set; }
@@ -12,7 +13,7 @@ namespace AspnetCoreMessageIdentity.Models.MessageModels
         public bool IsImportant { get; set; }
         public bool IsDraft { get; set; }
         public int MailTagsID { get; set; }
-
+        public string MailTag { get; set; }
         public IFormFile formFile { get; set; }
     }
 }

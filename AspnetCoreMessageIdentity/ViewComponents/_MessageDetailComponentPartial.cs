@@ -16,14 +16,16 @@ namespace AspnetCoreMessageIdentity.ViewComponents
             _userManager = userManager;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int id)
+        public async Task<IViewComponentResult> InvokeAsync(int id, string? ut)
         {
+            if (ut != null)
+            {
+                TempData["ShowButtons"] = "true";
+            }
+
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            ViewBag.UserId = user.Id;
-            var value = _context.Mail.Include(x => x.Sender).Include(x => x.ReplyMails).Include(x => x.ForwadMails).FirstOrDefault(x => x.MailsId == id);
-            ViewBag.Detail = _context.ForwadMails.Include(x => x.SenderUser).Include(t => t.OldUser).Where(x => x.MailsId == id && x.ReciverID == user.Id).FirstOrDefault();
+            var value = _context.Mail.Include(x => x.Sender).FirstOrDefault(x => x.MailsId == id);
             value.IsRead = true;
-            value.IsSenderMessageRead = true;
             _context.SaveChanges();
             return View(value);
         }

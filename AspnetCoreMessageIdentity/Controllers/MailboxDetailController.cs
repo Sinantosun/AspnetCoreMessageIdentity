@@ -26,13 +26,8 @@ namespace AspnetCoreMessageIdentity.Controllers
             }
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            ViewBag.UserId = user.Id;
-            var value = _context.Mail.Include(x => x.Sender).Include(x => x.ReplyMails).Include(x => x.ForwadMails).FirstOrDefault(x => x.MailsId == id);
-            ViewBag.Detail = _context.ForwadMails.Include(x => x.SenderUser).Include(t => t.OldUser).Where(x => x.MailsId == id && x.ReciverID == user.Id).FirstOrDefault();
-            ViewBag.FindReplay = _context.replyMails.FirstOrDefault(x => x.MailsId == id);
+            var value = _context.Mail.Include(x => x.Sender).FirstOrDefault(x => x.MailsId == id);
             value.IsRead = true;
-            value.IsSenderMessageRead = true;
-            //yanıtlayan kişi yanıtlanacak kişi
             _context.SaveChanges();
             return View(value);
         }

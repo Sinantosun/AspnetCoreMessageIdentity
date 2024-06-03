@@ -15,7 +15,7 @@ namespace AspnetCoreMessageIdentity.ViewComponents
 
         public IViewComponentResult Invoke(int id)
         {
-            var value = _mailContext.replyMails.Include(x=>x.Mails).Where(x=>x.MailsId== id).FirstOrDefault();  
+            var value = _mailContext.Mail.Where(x => x.MailsId == id).FirstOrDefault();
             return View(value);
         }
     }

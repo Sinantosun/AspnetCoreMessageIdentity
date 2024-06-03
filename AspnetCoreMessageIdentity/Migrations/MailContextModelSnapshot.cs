@@ -124,39 +124,6 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.ForwadMails", b =>
-                {
-                    b.Property<int>("ForwadMailsID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ForwadMailsID"));
-
-                    b.Property<int>("MailsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OldUserID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReciverID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SenderID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ForwadMailsID");
-
-                    b.HasIndex("MailsId");
-
-                    b.HasIndex("OldUserID");
-
-                    b.HasIndex("ReciverID");
-
-                    b.HasIndex("SenderID");
-
-                    b.ToTable("ForwadMails");
-                });
-
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.MailTags", b =>
                 {
                     b.Property<int>("MailTagsID")
@@ -192,6 +159,9 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("ForwadDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDraft")
                         .HasColumnType("bit");
 
@@ -204,13 +174,19 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsSenderMessageRead")
+                    b.Property<bool>("IsReply")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("IsReplyDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsTrash")
                         .HasColumnType("bit");
 
                     b.Property<int>("MailTagsID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OldUserId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReceiverId")
@@ -227,41 +203,13 @@ namespace AspnetCoreMessageIdentity.Migrations
 
                     b.HasIndex("MailTagsID");
 
+                    b.HasIndex("OldUserId");
+
                     b.HasIndex("ReceiverId");
 
                     b.HasIndex("SenderId");
 
                     b.ToTable("Mail");
-                });
-
-            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.ReplyMails", b =>
-                {
-                    b.Property<int>("ReplyMailsID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReplyMailsID"));
-
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MailsId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MessageDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("MessageReplyDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ReplyMailsID");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("MailsId");
-
-                    b.ToTable("replyMails");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -367,41 +315,6 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.ForwadMails", b =>
-                {
-                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.Mails", "Mails")
-                        .WithMany("ForwadMails")
-                        .HasForeignKey("MailsId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "OldUser")
-                        .WithMany("ForwadOldUser")
-                        .HasForeignKey("OldUserID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "ReciverUser")
-                        .WithMany("ForwardReciver")
-                        .HasForeignKey("ReciverID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "SenderUser")
-                        .WithMany("ForwardSender")
-                        .HasForeignKey("SenderID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Mails");
-
-                    b.Navigation("OldUser");
-
-                    b.Navigation("ReciverUser");
-
-                    b.Navigation("SenderUser");
-                });
-
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.Mails", b =>
                 {
                     b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.MailTags", "MailTag")
@@ -409,6 +322,11 @@ namespace AspnetCoreMessageIdentity.Migrations
                         .HasForeignKey("MailTagsID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "OldUser")
+                        .WithMany("OldUserMessages")
+                        .HasForeignKey("OldUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "Receiver")
                         .WithMany("ReciverMessages")
@@ -419,33 +337,16 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "Sender")
                         .WithMany("SentMessages")
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("MailTag");
 
+                    b.Navigation("OldUser");
+
                     b.Navigation("Receiver");
 
                     b.Navigation("Sender");
-                });
-
-            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.ReplyMails", b =>
-                {
-                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.AppUser", "AppUserReciver")
-                        .WithMany("replyMails")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AspnetCoreMessageIdentity.DAL.Entities.Mails", "Mails")
-                        .WithMany("ReplyMails")
-                        .HasForeignKey("MailsId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("AppUserReciver");
-
-                    b.Navigation("Mails");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -501,29 +402,16 @@ namespace AspnetCoreMessageIdentity.Migrations
 
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.AppUser", b =>
                 {
-                    b.Navigation("ForwadOldUser");
-
-                    b.Navigation("ForwardReciver");
-
-                    b.Navigation("ForwardSender");
+                    b.Navigation("OldUserMessages");
 
                     b.Navigation("ReciverMessages");
 
                     b.Navigation("SentMessages");
-
-                    b.Navigation("replyMails");
                 });
 
             modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.MailTags", b =>
                 {
                     b.Navigation("Mails");
-                });
-
-            modelBuilder.Entity("AspnetCoreMessageIdentity.DAL.Entities.Mails", b =>
-                {
-                    b.Navigation("ForwadMails");
-
-                    b.Navigation("ReplyMails");
                 });
 #pragma warning restore 612, 618
         }

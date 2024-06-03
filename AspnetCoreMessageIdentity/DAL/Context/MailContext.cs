@@ -13,34 +13,19 @@ namespace AspnetCoreMessageIdentity.DAL.Context
 
         public DbSet<Mails> Mail { get; set; }
         public DbSet<MailTags> MailTags { get; set; }
-        public DbSet<ReplyMails> replyMails { get; set; }
-        public DbSet<ForwadMails> ForwadMails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             builder.Entity<Mails>()
-                .HasOne(m => m.Sender).WithMany(u => u.SentMessages).HasForeignKey(x => x.SenderId).OnDelete(DeleteBehavior.NoAction);
+                .HasOne(m => m.Sender).WithMany(u => u.SentMessages).HasForeignKey(x => x.SenderId).OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Mails>()
             .HasOne(m => m.Receiver).WithMany(u => u.ReciverMessages).HasForeignKey(x => x.ReceiverId).OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<ReplyMails>()
-           .HasOne(m => m.Mails).WithMany(u => u.ReplyMails).HasForeignKey(x => x.MailsId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<ForwadMails>()
-            .HasOne(m => m.Mails).WithMany(u => u.ForwadMails).HasForeignKey(x => x.MailsId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<ForwadMails>()
-         .HasOne(m => m.ReciverUser).WithMany(u => u.ForwardReciver).HasForeignKey(x => x.ReciverID).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<ForwadMails>()
-        .HasOne(m => m.SenderUser).WithMany(u => u.ForwardSender).HasForeignKey(x => x.SenderID).OnDelete(DeleteBehavior.Restrict);
-
-
-            builder.Entity<ForwadMails>()
-        .HasOne(m => m.OldUser).WithMany(u => u.ForwadOldUser).HasForeignKey(x => x.OldUserID).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Mails>()
+          .HasOne(m => m.OldUser).WithMany(u => u.OldUserMessages).HasForeignKey(x => x.OldUserId).OnDelete(DeleteBehavior.Restrict);
 
         }
     }

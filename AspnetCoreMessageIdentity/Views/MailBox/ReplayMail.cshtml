@@ -23,19 +23,31 @@
                     <br />
                     <br />
                     <form method="post" enctype="multipart/form-data">
-                        <input type="hidden" asp-for="MailsID" readonly class="form-control">
+                    <input type="hidden" asp-for="MailsID" class="form-control">
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Email: *</label>
+                            <label class="col-sm-2 col-form-label">Ek dosyası seçiniz</label>
+                            <div class="col-sm-10"><input type="file" asp-for="formFile" class="form-control"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Mesaj kategorisi *</label>
 
-                            <div class="col-sm-10"><input type="text" asp-for="Email" readonly class="form-control"></div>
+                            <div class="col-sm-10"><input type="text" asp-for="MailTag" readonly class="form-control"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Mesaj Başlığı: *</label>
+                            <div class="col-sm-10"><input type="text" asp-for="Subject" readonly class="form-control"></div>
                         </div>
                         <br />
+                        <div class="form-group row">
+                            <div class="col-12"> <input id="IsImportantCheckbox" type="checkbox" asp-for="IsImportant" /> &nbsp;  <label for="IsImportantCheckbox" style="font-weight:bold">Önemli Olarak İşaretle  </label> </div>
+                        </div>
                         <div class="mail-text h-200">
-                            <textarea class="summernote" asp-for="Description" id="summernote"> </textarea>
+                            <textarea class="summernote" asp-for="Content" id="summernote"> </textarea>
                         </div>
 
                         <div class="mail-body text-right tooltip-demo">
-                            <button asp-action="ReplayMail" asp-controller="Mailbox" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Yanıtla"><i class="fa fa-reply"></i> Yanıtla</button>
+                            <button asp-action="ReplayMail" asp-controller="Mailbox" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Gönder"><i class="fa fa-reply"></i> Gönder</button>
+                            <button asp-action="MoveMessageToDraftFolder" asp-controller="Mailbox" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Taslak klasörüne taşı"><i class="fa fa-pencil"></i> Taslak</button>
                         </div>
                     </form>
                     <div style="display:flex; justify-content:center; align-items:center;" class="form-group row">

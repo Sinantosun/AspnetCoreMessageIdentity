@@ -34,7 +34,7 @@
                         }
                         else
                         {
-                            <span class="text-right mail-date">Mail adresi <span style="font-weight:bold">@ViewBag.Detail.SenderUser.Email</span></span>
+                            <span class="text-right mail-date">Mail adresi <span style="font-weight:bold">@Model.Sender.Email</span></span>
                             <br />
                         }
                     </h5>
@@ -72,41 +72,40 @@
                         </div>
                     </div>
                 }
-               
-                @if (ViewBag.FindReplay != null)
+
+                @if (Model.IsReply )
                 {
                     <hr />
-                    <p style="margin-left:15px" class="mt-2 p-2"><i class="fa fa-info-circle text-info" aria-hidden="true"></i> Bu mesajı @ViewBag.FindReplay.MessageReplyDate.ToString("f") tarihinde yanıtladınız.</p>
+                    <p style="margin-left:15px" class="mt-2 p-2"><i class="fa fa-info-circle text-info" aria-hidden="true"></i> Bu mesajı @Model.IsReplyDate tarihinde yanıtladınız.</p>
                     @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=Model.MailsId})
                 }
                 else
-                { 
+                {
+                   
                     @if (TempData["ShowButtons"] == null)
                     {
                         <p style="margin-left:15px" class="mt-2 p-2">Bu mesajı henüz yanıtlamadınız</p>
-                       
                     }
-                   
+
+
+
                 }
                 @if (Model.IsForwad)
                 {
-                    @if (ViewBag.Detail != null)
-                    {
+                    <span style="margin-left:15px" class="mt-1 p-2 mb-3">Bu mesaj <span style="text-transform:capitalize; font-weight:bold;">@Model.OldUser.NameSurname</span>  tarafından <span style="text-transform:capitalize; font-weight:bold;"> @Model.Sender.NameSurname</span>   tarafına <span style="text-transform:capitalize; font-weight:bold;">  @Model.Sender.NameSurname </span>  tarafından da size iletilmiştir.</span>
+                    <br />
+                    <br />
 
-                        <span style="margin-left:15px" class="mt-1 p-2 mb-3">Bu mesaj <span style="text-transform:capitalize; font-weight:bold;">@ViewBag.Detail.OldUser.NameSurname</span>  tarafından <span style="text-transform:capitalize; font-weight:bold;"> @ViewBag.Detail.SenderUser.NameSurname</span>   tarafına <span style="text-transform:capitalize; font-weight:bold;">  @ViewBag.Detail.SenderUser.NameSurname </span>  tarafından da size iletilmiştir.</span>
-                        <br />
-                        <br />
 
-                    }
                 }
                 @if (TempData["ShowButtons"] == null)
                 {
                     <div class="mail-body text-right tooltip-demo">
 
-                        @if (ViewBag.FindReplay == null)
+                        @if (!Model.IsReply)
                         {
                             <a title="Mesajı Yanıtla" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Mesajı Yanıtla" class="btn btn-sm btn-white" href="/Mailbox/ReplayMail/@Model.MailsId"><i class="fa fa-reply"></i> Yanıtla</a>
-                            @if (ViewBag.FindForwad == null)
+                            @if (!Model.IsForwad)
                             {
                                 <a title="Mesajı İlet" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white" href="/Mailbox/ForwardMail/@Model.MailsId"><i class="fa fa-arrow-right"></i> İlet</a>
                             }

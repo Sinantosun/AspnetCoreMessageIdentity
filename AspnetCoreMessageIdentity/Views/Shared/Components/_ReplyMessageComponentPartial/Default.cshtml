@@ -1,5 +1,5 @@
 ﻿@using AspnetCoreMessageIdentity.DAL.Entities;
-@model ReplyMails
+@model Mails
 <div class="col-md-12 animated fadeInRight" id="mail-body">
     <div class="mail-box-header">
         <h2>
@@ -7,7 +7,7 @@
         </h2>
         <div class="mail-tools tooltip-demo m-t-md">
             <h3>
-                <span class="font-normal">Konu: </span> @Model.Mails.Subject  - (Yanıt)
+                <span class="font-normal">Konu: </span> @Model.Subject  - (Yanıt)
             </h3>
         </div>
     </div>
@@ -15,7 +15,7 @@
 
 
         <div class="mail-body">
-            @Html.Raw(Model.MessageDescription)
+            @Html.Raw(Model.Content)
         </div>
         <div class="clearfix"></div>
 
