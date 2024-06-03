@@ -27,7 +27,7 @@
                     </h3>
                     <h5>
 
-                        <span class="float-right font-normal"> @Model.Date.ToString("dd MMM yyyy") @Model.Date.ToString("hh:mm")</span>
+                        <span class="float-right font-normal"> @Model.Date.ToString("dd MMM yyyy") @Model.Date.ToString("t")</span>
                         @if (!Model.IsForwad)
                         {
                             <span class="font-normal">Kimden:  @Model.Sender.Email </span>

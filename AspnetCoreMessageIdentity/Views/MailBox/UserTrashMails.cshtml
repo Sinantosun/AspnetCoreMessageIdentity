@@ -9,7 +9,7 @@
 @using AspnetCoreMessageIdentity.DAL.Entities;
 @model List<Mails>
 @{
-    string cardCss = "";
+    
     string TagCss = "";
 
 }
@@ -105,14 +105,7 @@
                             @foreach (var item in Model)
                             {
 
-                                @if (item.IsRead)
-                                {
-                                    cardCss = "read";
-                                }
-                                else
-                                {
-                                    cardCss = "unread";
-                                }
+                              
                                 @if (item.MailTagsID == 1)
                                 {
                                     TagCss = "label-dark";
@@ -125,7 +118,7 @@
                                 {
                                     TagCss = "label-success";
                                 }
-                                <tr class="@cardCss">
+                                <tr class="read">
                                     <td class="check-mail">
                                         <input type="checkbox" name="MarkChekbox" value="@item.MailsId" class="i-checks checkbox">
                                     </td>

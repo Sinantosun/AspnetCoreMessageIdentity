@@ -37,7 +37,7 @@ namespace AspnetCoreMessageIdentity.Controllers
                     {
                         return Redirect(returnUrl);
                     }
-                  
+
                 }
                 else if (result.IsLockedOut)
                 {
@@ -50,6 +50,11 @@ namespace AspnetCoreMessageIdentity.Controllers
             }
 
             return View();
+        }
+        public async Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index");
         }
     }
 }

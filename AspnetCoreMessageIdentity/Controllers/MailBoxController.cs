@@ -244,5 +244,28 @@ namespace AspnetCoreMessageIdentity.Controllers
 
             return View(MessageList);
         }
+
+
+        public async Task<IActionResult> EditDraft(int id)
+        {
+            var mail = _mailContext.Mail.Find(id);
+            CreateMessageViewModel createMessageViewModel = new CreateMessageViewModel()
+            {
+                Attachment = mail.Attachment,
+                Content = mail.Content,
+                Subject = mail.Subject,
+                MailTagsID = mail.MailTagsID,
+
+            };
+            var MailTagList = _mailContext.MailTags.ToList();
+            List<SelectListItem> MailTags = (from x in MailTagList
+                                             select new SelectListItem
+                                             {
+                                                 Text = x.TagName,
+                                                 Value = x.MailTagsID.ToString()
+                                             }).ToList();
+            ViewBag.MailTag = MailTags;
+            return View("Composemessage", createMessageViewModel);
+        }
     }
 }
