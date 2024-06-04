@@ -21,7 +21,7 @@ namespace AspnetCoreMessageIdentity.Controllers
         public async Task<IActionResult> Index()
         {
             var value = await _userManager.FindByNameAsync(User.Identity.Name);
-            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList();
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Include(t=>t.OldUser).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList();
             return View(MessageList);
         }
         [HttpGet]
@@ -197,7 +197,7 @@ namespace AspnetCoreMessageIdentity.Controllers
                 Subject = mailUser.Subject,
                 ReceiverId = finByMail.Id,
                 SenderId = SenderUser.Id,
-                OldUserId = mailUser.ReceiverId,
+                OldUserId = mailUser.SenderId,
                 Attachment = mailUser.Attachment,
             });
             _mailContext.SaveChanges();
