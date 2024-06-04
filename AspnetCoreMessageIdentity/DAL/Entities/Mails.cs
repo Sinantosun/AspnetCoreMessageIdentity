@@ -4,6 +4,8 @@
     {
         public int MailsId { get; set; }
 
+        public int? MailReplyId { get; set; }
+
         public string Subject { get; set; }
         public string Content { get; set; }
         public string? Attachment { get; set; }
@@ -14,6 +16,8 @@
         public bool IsRead { get; set; }
         public bool IsTrash { get; set; }
         public bool IsDraft { get; set; }
+
+        public int? MailForwardId { get; set; }
 
         public DateTime? ForwadDate { get; set; }
         public bool IsForwad { get; set; }

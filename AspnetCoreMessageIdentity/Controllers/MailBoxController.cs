@@ -113,6 +113,7 @@ namespace AspnetCoreMessageIdentity.Controllers
             }
             _mailContext.Mail.Add(new Mails
             {
+                MailReplyId = replayMailViewModel.MailsID,
                 Content = replayMailViewModel.Content,
                 Date = DateTime.Now,
                 IsDraft = replayMailViewModel.IsDraft,
@@ -132,6 +133,75 @@ namespace AspnetCoreMessageIdentity.Controllers
             _mailContext.SaveChanges();
             return RedirectToAction("Index");
 
+        }
+
+
+        public async Task<IActionResult> UserMails()
+        {
+            var value = await _userManager.FindByNameAsync(User.Identity.Name);
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.SenderId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList();
+            return View(MessageList);
+        }
+        public async Task<IActionResult> UserImportantMails()
+        {
+            var value = await _userManager.FindByNameAsync(User.Identity.Name);
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false && x.IsImportant == true).ToList();
+            return View(MessageList);
+        }
+        public async Task<IActionResult> UserDraftMails()
+        {
+            var value = await _userManager.FindByNameAsync(User.Identity.Name);
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == true).ToList();
+            return View(MessageList);
+        }
+        public async Task<IActionResult> UserTrashMails()
+        {
+            var value = await _userManager.FindByNameAsync(User.Identity.Name);
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == true).ToList();
+            return View(MessageList);
+        }
+        [HttpGet]
+        public IActionResult ForwardMail(int id)
+        {
+            var value = _mailContext.Mail.Find(id);
+            ForwadMailViewModel forwadMailViewModel = new ForwadMailViewModel()
+            {
+
+                MailsId = id,
+                Content=value.Content,
+
+            };
+            return View(forwadMailViewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ForwardMail(ForwadMailViewModel forwadMailViewModel)
+        {
+
+            var mailUser = _mailContext.Mail.Include(t => t.Sender).Include(t => t.MailTag).FirstOrDefault(x => x.MailsId == forwadMailViewModel.MailsId);
+            var SenderUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            var finByMail = await _userManager.FindByEmailAsync(forwadMailViewModel.Email);
+            _mailContext.Mail.Add(new Mails
+            {
+                Content = mailUser.Content,
+                Date = DateTime.Now,
+                ForwadDate = DateTime.Now,
+                IsDraft = false,
+                IsImportant = false,
+                IsForwad = true,
+                IsRead = false,
+                MailForwardId = forwadMailViewModel.MailsId,
+                
+                IsReply = false,
+                IsTrash = false,
+                MailTagsID = mailUser.MailTag.MailTagsID,
+                Subject = mailUser.Subject,
+                ReceiverId = finByMail.Id,
+                SenderId = SenderUser.Id,
+                OldUserId = mailUser.ReceiverId,
+                Attachment = mailUser.Attachment,
+            });
+            _mailContext.SaveChanges();
+            return RedirectToAction("Index");
         }
 
     }

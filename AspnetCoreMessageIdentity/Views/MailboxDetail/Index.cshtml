@@ -73,19 +73,25 @@
                     </div>
                 }
 
-                @if (Model.IsReply )
+                @if (ViewBag.test)
                 {
                     <hr />
-                    <p style="margin-left:15px" class="mt-2 p-2"><i class="fa fa-info-circle text-info" aria-hidden="true"></i> Bu mesajı @Model.IsReplyDate tarihinde yanıtladınız.</p>
-                    @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=Model.MailsId})
+                    <p style="margin-left:15px" class="mt-2 p-2"><i class="fa fa-info-circle text-info" aria-hidden="true"></i> Bu mesajı @ViewBag.test2 tarihinde yanıtladınız.</p>
+                    @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=ViewBag.test3})
                 }
                 else
                 {
-                   
+                    @if (Model.IsReply)
+                    {
+                        @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=Model.MailReplyId})
+                    }
                     @if (TempData["ShowButtons"] == null)
                     {
                         <p style="margin-left:15px" class="mt-2 p-2">Bu mesajı henüz yanıtlamadınız</p>
                     }
+
+
+
 
 
 
@@ -98,26 +104,19 @@
 
 
                 }
-                @if (TempData["ShowButtons"] == null)
-                {
-                    <div class="mail-body text-right tooltip-demo">
+                <div class="mail-body text-right tooltip-demo">
+                    @if (TempData["ShowButtons"] == null)
+                    {
 
-                        @if (!Model.IsReply)
-                        {
-                            <a title="Mesajı Yanıtla" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Mesajı Yanıtla" class="btn btn-sm btn-white" href="/Mailbox/ReplayMail/@Model.MailsId"><i class="fa fa-reply"></i> Yanıtla</a>
-                            @if (!Model.IsForwad)
-                            {
-                                <a title="Mesajı İlet" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white" href="/Mailbox/ForwardMail/@Model.MailsId"><i class="fa fa-arrow-right"></i> İlet</a>
-                            }
 
-                        }
+                        <a title="Mesajı Yanıtla" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Mesajı Yanıtla" class="btn btn-sm btn-white" href="/Mailbox/ReplayMail/@Model.MailsId"><i class="fa fa-reply"></i> Yanıtla</a>
+                        <a title="Mesajı İlet" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white" href="/Mailbox/ForwardMail/@Model.MailsId"><i class="fa fa-arrow-right"></i> İlet</a>
 
-                        <button title="Yazdır" data-placement="top" onclick="printPage('mail-body')" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white"><i class="fa fa-print"></i> Yazdır</button>
-                        <a title="Çöp kutusuna taşı" onclick="MoveTrashFolder(@Model.MailsId)" data-placement="top" data-toggle="tooltip" data-original-title="Çöp kutusuna taşı" class="btn btn-sm btn-white"><i class="fa fa-trash-o"></i> Çöp Kutusuna taşı</a>
-                    </div>
 
-                }
-
+                    }
+                    <button title="Yazdır" data-placement="top" onclick="printPage('mail-body')" data-toggle="tooltip" type="button" data-original-title="Yazdır" class="btn btn-sm btn-white"><i class="fa fa-print"></i> Yazdır</button>
+                    <a title="Çöp kutusuna taşı" onclick="MoveTrashFolder(@Model.MailsId)" data-placement="top" data-toggle="tooltip" data-original-title="Çöp kutusuna taşı" class="btn btn-sm btn-white"><i class="fa fa-trash-o"></i> Çöp Kutusuna taşı</a>
+                </div>
                 <div class="clearfix"></div>
 
 

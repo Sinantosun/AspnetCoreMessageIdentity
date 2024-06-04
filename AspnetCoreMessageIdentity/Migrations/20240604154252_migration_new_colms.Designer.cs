@@ -4,6 +4,7 @@ using AspnetCoreMessageIdentity.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspnetCoreMessageIdentity.Migrations
 {
     [DbContext(typeof(MailContext))]
-    partial class MailContextModelSnapshot : ModelSnapshot
+    [Migration("20240604154252_migration_new_colms")]
+    partial class migration_new_colms
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,7 +186,7 @@ namespace AspnetCoreMessageIdentity.Migrations
                     b.Property<bool>("IsTrash")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("MailForwardId")
+                    b.Property<int>("MailForwardId")
                         .HasColumnType("int");
 
                     b.Property<int?>("MailReplyId")
