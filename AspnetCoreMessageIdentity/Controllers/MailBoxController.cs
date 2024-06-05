@@ -21,7 +21,7 @@ namespace AspnetCoreMessageIdentity.Controllers
         public async Task<IActionResult> Index()
         {
             var value = await _userManager.FindByNameAsync(User.Identity.Name);
-            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Include(t=>t.OldUser).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList();
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Include(t => t.OldUser).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList();
             return View(MessageList);
         }
         [HttpGet]
@@ -157,7 +157,7 @@ namespace AspnetCoreMessageIdentity.Controllers
         public async Task<IActionResult> UserTrashMails()
         {
             var value = await _userManager.FindByNameAsync(User.Identity.Name);
-            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == true).ToList();
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == true || x.SenderId == value.Id && x.IsTrash == true).ToList();
             return View(MessageList);
         }
         [HttpGet]
@@ -168,7 +168,7 @@ namespace AspnetCoreMessageIdentity.Controllers
             {
 
                 MailsId = id,
-                Content=value.Content,
+                Content = value.Content,
 
             };
             return View(forwadMailViewModel);
@@ -190,7 +190,7 @@ namespace AspnetCoreMessageIdentity.Controllers
                 IsForwad = true,
                 IsRead = false,
                 MailForwardId = forwadMailViewModel.MailsId,
-                
+
                 IsReply = false,
                 IsTrash = false,
                 MailTagsID = mailUser.MailTag.MailTagsID,
@@ -200,6 +200,16 @@ namespace AspnetCoreMessageIdentity.Controllers
                 OldUserId = mailUser.SenderId,
                 Attachment = mailUser.Attachment,
             });
+            _mailContext.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
+
+        public IActionResult MoveMessageToTrashFolder(int id)
+        {
+            var value = _mailContext.Mail.Find(id);
+            value.IsTrash = true;
             _mailContext.SaveChanges();
             return RedirectToAction("Index");
         }

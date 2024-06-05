@@ -22,7 +22,7 @@ namespace AspnetCoreMessageIdentity.ViewComponents
             ViewBag.SentMessageCount = _context.Mail.Where(x => x.SenderId == user.Id && x.IsTrash == false && x.IsDraft == false).Count();
             ViewBag.ImportantMessageCount = _context.Mail.Where(x => x.ReceiverId == user.Id && x.IsImportant == true && x.IsTrash == false && x.IsDraft == false).Count();
             ViewBag.DraftCount = _context.Mail.Where(x => x.SenderId == user.Id && x.IsDraft == true).Count();
-            ViewBag.TrashCount = _context.Mail.Where(x => x.ReceiverId == user.Id && x.IsTrash == true).Count();
+            ViewBag.TrashCount = _context.Mail.Where(x => x.ReceiverId == user.Id && x.IsTrash == true || x.SenderId == user.Id && x.IsTrash == true).Count();
 
 
             return View();

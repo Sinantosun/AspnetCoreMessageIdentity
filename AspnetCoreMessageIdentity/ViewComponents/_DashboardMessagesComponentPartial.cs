@@ -19,8 +19,10 @@ namespace AspnetCoreMessageIdentity.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-          
-            return View();
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var mails = _mailContext.Mail.Include(t=>t.Sender).Where(x => x.ReceiverId == user.Id && x.IsTrash == false && x.IsRead == false && x.IsDraft == false).Take(5).ToList();
+            return View(mails);
         }
     }
 }

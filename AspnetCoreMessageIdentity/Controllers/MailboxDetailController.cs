@@ -26,28 +26,36 @@ namespace AspnetCoreMessageIdentity.Controllers
             }
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var value = _context.Mail.Include(x => x.Sender).Include(t=>t.Receiver).Include(z=>z.OldUser).FirstOrDefault(x => x.MailsId == id);
+            var value = _context.Mail.Include(x => x.Sender).Include(t => t.Receiver).Include(z => z.OldUser).FirstOrDefault(x => x.MailsId == id);
 
-
-            var value2 = _context.Mail.FirstOrDefault(x => x.SenderId == user.Id && x.MailReplyId==id);
+            var value2 = _context.Mail.FirstOrDefault(x => x.SenderId == user.Id && x.MailReplyId == id);
             if (value2 != null)
             {
-                ViewBag.test = value2.IsReply;
-                ViewBag.test2 = value2.IsReplyDate;
-                ViewBag.test3 = value2.MailsId;
+                ViewBag.IsReply = value2.IsReply;
+                ViewBag.ReplyDate = value2.IsReplyDate;
+                ViewBag.ReplyId = value2.MailsId;
 
-                TempData["ShowButtons"] = "true";
+               
             }
             else
             {
-                ViewBag.test = false;
+                ViewBag.IsReply = false;
             }
-       
 
-        
-            value.IsRead = true;
 
-            _context.SaveChanges();
+            if (value.SenderId != user.Id)
+            {
+                ViewBag.To = "Kimden";
+                value.IsReciverReadMessage = true;
+                value.IsRead = true;
+                value.ReciverReadMessageDate = Convert.ToDateTime(DateTime.Now.ToString("g"));
+                _context.SaveChanges();
+            }
+            else
+            {
+                ViewBag.To = "Kime";
+            }
+
             return View(value);
         }
     }

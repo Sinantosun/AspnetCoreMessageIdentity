@@ -28,9 +28,19 @@
                     <h5>
 
                         <span class="float-right font-normal"> @Model.Date.ToString("dd MMM yyyy") @Model.Date.ToString("t")</span>
+                        
                         @if (!Model.IsForwad)
                         {
-                            <span class="font-normal">Kimden:  @Model.Sender.Email </span>
+                            @if (ViewBag.To == "Kime")
+                            {
+                                <span class="font-normal">@ViewBag.To:  @Model.Receiver.Email </span>
+                            }
+                            else
+                            {
+                                <span class="font-normal">@ViewBag.To:  @Model.Sender.Email </span>
+                            }
+
+
                         }
                         else
                         {
@@ -73,11 +83,11 @@
                     </div>
                 }
 
-                @if (ViewBag.test)
+                @if (ViewBag.IsReply)
                 {
                     <hr />
-                    <p style="margin-left:15px" class="mt-2 p-2"><i class="fa fa-info-circle text-info" aria-hidden="true"></i> Bu mesajı @ViewBag.test2 tarihinde yanıtladınız.</p>
-                    @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=ViewBag.test3})
+                    <p style="margin-left:15px" class="mt-2 p-2"><i class="fa fa-info-circle text-info" aria-hidden="true"></i> Bu mesajı @ViewBag.ReplyDate tarihinde yanıtladınız.</p>
+                    @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=ViewBag.ReplyId})
                 }
                 else
                 {

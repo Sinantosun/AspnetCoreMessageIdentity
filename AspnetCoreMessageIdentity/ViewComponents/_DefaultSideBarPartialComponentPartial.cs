@@ -15,7 +15,9 @@ namespace AspnetCoreMessageIdentity.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-        
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            ViewBag.UserNameSurname = user.NameSurname;
+            ViewBag.UserUserName = user.UserName;
             return View();
         }
     }
