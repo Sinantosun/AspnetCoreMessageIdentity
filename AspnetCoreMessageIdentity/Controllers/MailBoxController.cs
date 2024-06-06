@@ -57,9 +57,12 @@ namespace AspnetCoreMessageIdentity.Controllers
                     var FileName = Guid.NewGuid() + Path.GetExtension(createMessageViewModel.formFile.FileName);
                     var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Attachments/", FileName);
                     var stream = new FileStream(location, FileMode.Create);
+                    await createMessageViewModel.formFile.CopyToAsync(stream);
                     stream.Dispose();
                     stream.Close();
+
                     createMessageViewModel.Attachment = "/Attachments/" + FileName;
+
                 }
                 _mailContext.Mail.Add(new Mails
                 {

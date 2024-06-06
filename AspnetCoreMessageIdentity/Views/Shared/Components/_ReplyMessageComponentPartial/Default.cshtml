@@ -15,9 +15,17 @@
 
 <div class="col-lg animated fadeInRight" id="mail-body">
     <div class="mail-box-header">
-        <h2>
-            Mesaj Detayı
-        </h2>
+        @if (ViewBag.DetailTitle==null)
+        {
+            <h2>Mesaj Detayı </h2>
+            
+        }
+        else
+        {
+            <h2>@ViewBag.DetailTitle</h2>
+
+        }
+        
         <div class="mail-tools tooltip-demo m-t-md">
             <h3>
                 <span class="font-normal">Konu: </span>@Model.Subject
