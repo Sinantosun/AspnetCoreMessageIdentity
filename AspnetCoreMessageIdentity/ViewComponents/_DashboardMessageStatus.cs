@@ -22,7 +22,7 @@ namespace AspnetCoreMessageIdentity.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var mails = _mailContext.Mail.Include(t => t.Receiver).Where(x => x.SenderId == user.Id).ToList();
+            var mails = _mailContext.Mail.Include(t => t.Receiver).Where(x => x.SenderId == user.Id).OrderByDescending(x=>x.MailsId).Take(5).ToList();
 
 
             foreach (var mail in mails)

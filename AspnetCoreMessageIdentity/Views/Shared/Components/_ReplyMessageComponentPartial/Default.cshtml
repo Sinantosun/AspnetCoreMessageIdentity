@@ -15,45 +15,15 @@
 
 <div class="col-lg animated fadeInRight" id="mail-body">
     <div class="mail-box-header">
-        @if (ViewBag.DetailTitle==null)
+        @if (ViewBag.ReplyDate != null)
         {
-            <h2>Mesaj Detayı </h2>
-            
-        }
-        else
-        {
-            <h2>@ViewBag.DetailTitle</h2>
+                 <h5>@(((DateTime)ViewBag.ReplyDate).ToString("f")) tarihinde yanıtladınız.</h5>
 
         }
-        
-        <div class="mail-tools tooltip-demo m-t-md">
-            <h3>
-                <span class="font-normal">Konu: </span>@Model.Subject
-            </h3>
-            <h5>
-
-                <span class="float-right font-normal"> @Model.Date.ToString("dd MMM yyyy") @Model.Date.ToString("t")</span>
-
-                @if (!Model.IsForwad)
-                {
-                    @if (ViewBag.To == "Kime")
-                    {
-                        <span class="font-normal">@ViewBag.To:  @Model.Receiver.Email </span>
-                    }
-                    else
-                    {
-                        <span class="font-normal">@ViewBag.To:  @Model.Sender.Email </span>
-                    }
-
-
-                }
-                else
-                {
-                    <span class="text-right mail-date">Mail adresi <span style="font-weight:bold">@Model.Sender.Email</span></span>
-                    <br />
-                }
-            </h5>
-        </div>
+   
+        <br />
+        <h4>@ViewBag.DetailTitle</h4>
+        <br />
     </div>
     <div class="mail-box">
 
@@ -89,4 +59,5 @@
         }
 
     </div>
+
 </div>

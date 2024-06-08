@@ -72,7 +72,7 @@
                                             <i class="fa fa-file"></i>
                                         </div>
                                         <div class="file-name">
-                                            @Model.Attachment
+                                            @Model.AttachmentFileName
                                             <br />
                                         </div>
                                     </a>
@@ -87,14 +87,14 @@
                 {
                     ViewBag.DetailTitle = "Yanıtınız";
                     <hr />
-                    <p style="margin-left:15px" class="mt-2 p-2"><i class="fa fa-info-circle text-info" aria-hidden="true"></i> Bu mesajı @ViewBag.ReplyDate tarihinde yanıtladınız.</p>
+                   
                     @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=ViewBag.ReplyId})
                 }
                 else
                 {
                     @if (Model.IsReply)
                     {
-                        ViewBag.DetailTitle = "Yanıtınız";
+                        ViewBag.DetailTitle = "Gelen Mesaj";
                         @await Component.InvokeAsync("_ReplyMessageComponentPartial",new {@id=Model.MailReplyId})
                     }
                     @if (TempData["ShowButtons"] == null)

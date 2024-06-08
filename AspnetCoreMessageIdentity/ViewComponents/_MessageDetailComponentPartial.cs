@@ -24,9 +24,10 @@ namespace AspnetCoreMessageIdentity.ViewComponents
             }
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var value = _context.Mail.Include(x => x.Sender).FirstOrDefault(x => x.MailsId == id);
+            var value = _context.Mail.Include(x => x.Sender).Include(t => t.Receiver).Include(z => z.OldUser).FirstOrDefault(x => x.MailsId == id);
             value.IsRead = true;
             _context.SaveChanges();
+
             return View(value);
         }
     }

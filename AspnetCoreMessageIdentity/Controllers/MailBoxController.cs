@@ -57,9 +57,9 @@ namespace AspnetCoreMessageIdentity.Controllers
                     var FileName = Guid.NewGuid() + Path.GetExtension(createMessageViewModel.formFile.FileName);
                     var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Attachments/", FileName);
                     var stream = new FileStream(location, FileMode.Create);
-                    await createMessageViewModel.formFile.CopyToAsync(stream);
-                    stream.Dispose();
+                    createMessageViewModel.formFile.CopyTo(stream);
                     stream.Close();
+                    stream.Dispose();
 
                     createMessageViewModel.Attachment = "/Attachments/" + FileName;
 
@@ -72,6 +72,7 @@ namespace AspnetCoreMessageIdentity.Controllers
                     IsImportant = createMessageViewModel.IsImportant,
                     IsForwad = false,
                     IsRead = false,
+                    AttachmentFileName = (createMessageViewModel.formFile == null ? null : createMessageViewModel.formFile.FileName),
                     IsReply = false,
                     IsTrash = false,
                     MailTagsID = createMessageViewModel.MailTagsID,
@@ -88,6 +89,7 @@ namespace AspnetCoreMessageIdentity.Controllers
         [HttpGet]
         public async Task<IActionResult> ReplayMail(int id)
         {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var value = _mailContext.Mail.Include(t => t.MailTag).FirstOrDefault(x => x.MailsId == id);
             ReplayMailViewModel replayMailViewModel = new ReplayMailViewModel()
             {
@@ -98,6 +100,16 @@ namespace AspnetCoreMessageIdentity.Controllers
 
             };
             TempData["ShowButtons"] = "false";
+            if (value.SenderId != user.Id)
+            {
+                ViewBag.To = "Kimden";
+
+
+            }
+            else
+            {
+                ViewBag.To = "Kime";
+            }
             return View(replayMailViewModel);
         }
         [HttpPost]

@@ -9,6 +9,7 @@
         public string Subject { get; set; }
         public string Content { get; set; }
         public string? Attachment { get; set; }
+        public string? AttachmentFileName { get; set; }
 
         public DateTime Date { get; set; }
 
