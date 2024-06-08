@@ -20,6 +20,7 @@ namespace AspnetCoreMessageIdentity.Controllers
             return PartialView();
         }
 
+
         public PartialViewResult DefaultScriptsPartial()
         {
             return PartialView();

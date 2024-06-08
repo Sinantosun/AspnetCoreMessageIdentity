@@ -10,10 +10,12 @@ namespace AspnetCoreMessageIdentity.Controllers
     public class LoginController : Controller
     {
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public LoginController(SignInManager<AppUser> signInManager)
+        public LoginController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
         }
         [HttpGet]
         public IActionResult Index(string? returnUrl)
@@ -29,12 +31,17 @@ namespace AspnetCoreMessageIdentity.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Pwd, false, true);
                 if (result.Succeeded)
                 {
+                    var user = await _userManager.FindByNameAsync(model.UserName);
                     if (string.IsNullOrEmpty(returnUrl))
                     {
+                        TempData["UserStatus"] = "Online";
+                        TempData["UserNameSurname"] = user.NameSurname;
                         return RedirectToAction("Index", "Dashboard");
                     }
                     else
                     {
+                        TempData["UserNameSurname"] = user.NameSurname;
+                        TempData["UserStatus"] = "Online";
                         return Redirect(returnUrl);
                     }
 

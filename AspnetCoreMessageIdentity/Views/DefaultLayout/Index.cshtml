@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
@@ -10,17 +9,73 @@
 
 <body class="">
 
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/Template/inspinia-gh-pages/js/jquery-3.1.1.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @if (TempData["UserStatus"] != null)
+    {
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script type="text/javascript">
+            $(function () {
+
+                var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7071/SignalRHub").build();
+                connection.start().then(() => {
+                    connection.invoke("GetNickName", "@TempData["UserNameSurname"].ToString()");
+                    connection.invoke("SendMessageAsync", "kadir@gmail.com");
+                }).catch((err) => { console.log(err); });
+
+                connection.on("clientJoined", data => {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3500,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "info",
+                        title: data + " oturum açtı",
+                    });
+
+                });
+
+                connection.on("reciveMessage", data => {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Yeni Mesajınız Var!",
+                    });
+                });
+
+
+            });
+
+
+        </script>
+        TempData["UserStatus"] = null;
+    }
+
+
+
+
+
     <div id="wrapper">
 
 
         @await Component.InvokeAsync("_DefaultSideBarPartialComponentPartial")
         <div id="page-wrapper" class="gray-bg">
-             
+
             @await Component.InvokeAsync("_NavbarComponentPartial")
-          
+
 
             <div class="wrapper wrapper-content">
-               @RenderBody()
+                @RenderBody()
             </div>
             <div class="footer">
                 <div>
