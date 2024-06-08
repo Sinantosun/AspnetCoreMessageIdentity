@@ -1,0 +1,26 @@
+﻿
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3500,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+</script>
+
+@if (TempData["Result"] != null)
+{
+    <script>
+        Toast.fire({
+            icon: "@TempData["icon"]",
+            title: "@TempData["Result"]"
+        });
+    </script>
+    TempData["Result"] = null;
+}

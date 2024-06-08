@@ -1,0 +1,67 @@
+﻿@using AspnetCoreMessageIdentity.Models.Identity;
+@model UserResultViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/DefaultLayout/Index.cshtml";
+}
+
+<div id="page-wrapper" class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <h5>Profilim <br /><small>Hesabınız ile ilgili bilgileri buradan güncelliyebilirsiniz.</small></h5>
+                    </div>
+                    <div class="ibox-content">
+                 <form method="post">
+
+       
+                            <div class="form-group  row">
+                                <label class="col-sm-2 col-form-label">Ad Soyad</label>
+
+                                <div class="col-sm-10"><input type="text" asp-for="NameSurname" required class="form-control"></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Kullanıcı Adı</label>
+                                <div class="col-sm-10">
+                                    <input type="text" asp-for="UserName" required class="form-control">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Eski Şifreniz</label>
+
+                            <div class="col-sm-10"><input type="password" asp-for="OldPwd" required  class="form-control"></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Yeni Şifreniz</label>
+
+                                <div class="col-sm-10"><input type="password" asp-for="Pwd" class="form-control"></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Yeni Şifreniz Tekar</label>
+
+                                <div class="col-lg-10"><input type="password" asp-for="ConfrimPwd"  class="form-control"></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group row">
+                            <div class="col-lg-10"><input type="submit" class="btn btn-primary" value="Güncelle" /> </div>
+                            </div>
+
+                        </form>
+                        <div clas="alert alert-danger text-danger" asp-validation-summary="ModelOnly"></div>
+                    </div>
+     
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+

@@ -24,5 +24,10 @@ namespace AspnetCoreMessageIdentity.Controllers
         {
             return PartialView();
         }
+
+        public PartialViewResult NotificationPartial()
+        {
+            return PartialView();
+        }
     }
 }

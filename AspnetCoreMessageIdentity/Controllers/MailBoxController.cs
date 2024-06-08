@@ -82,7 +82,14 @@ namespace AspnetCoreMessageIdentity.Controllers
 
                     Attachment = createMessageViewModel.Attachment,
                 });
+                TempData["Result"] = "Mesajınız Gönderildi";
+                TempData["icon"] = "success";
                 _mailContext.SaveChanges();
+            }
+            else
+            {
+                TempData["Result"] = "Email adresi bulunamadı";
+                TempData["icon"] = "info";
             };
         }
 
@@ -146,6 +153,8 @@ namespace AspnetCoreMessageIdentity.Controllers
                 Attachment = replayMailViewModel.Attachment,
             });
             _mailContext.SaveChanges();
+            TempData["Result"] = "Mesaj Yanıtlandı";
+            TempData["icon"] = "success";
             return RedirectToAction("Index");
 
         }
@@ -216,6 +225,8 @@ namespace AspnetCoreMessageIdentity.Controllers
                 Attachment = mailUser.Attachment,
             });
             _mailContext.SaveChanges();
+            TempData["Result"] = "Mesaj İletildi";
+            TempData["icon"] = "success";
             return RedirectToAction("Index");
         }
 
@@ -226,6 +237,8 @@ namespace AspnetCoreMessageIdentity.Controllers
             var value = _mailContext.Mail.Find(id);
             value.IsTrash = true;
             _mailContext.SaveChanges();
+            TempData["Result"] = "Seçilen Öğeler Çöp Kutusuna Taşındı";
+            TempData["icon"] = "success";
             return RedirectToAction("Index");
         }
 
