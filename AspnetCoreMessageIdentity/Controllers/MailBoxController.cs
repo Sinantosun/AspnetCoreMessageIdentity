@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
+using X.PagedList;
+
 namespace AspnetCoreMessageIdentity.Controllers
 {
     public class MailBoxController : Controller
@@ -21,8 +23,12 @@ namespace AspnetCoreMessageIdentity.Controllers
         public async Task<JsonResult> GetUser()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
-            return Json(user.NameSurname);
+            var result = new
+            {
+                UserName = user.UserName,
+                NameSurname = user.NameSurname,
+            };
+            return Json(result);
 
         }
         async Task loadDrdopwn()
@@ -40,10 +46,10 @@ namespace AspnetCoreMessageIdentity.Controllers
             TempData["LoginedUser"] = user.NameSurname;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
             var value = await _userManager.FindByNameAsync(User.Identity.Name);
-            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Include(t => t.OldUser).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList();
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Include(t => t.OldUser).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList().ToPagedList(pageNumber, 10);
             return View(MessageList);
         }
         [HttpGet]
@@ -115,12 +121,13 @@ namespace AspnetCoreMessageIdentity.Controllers
         public async Task<IActionResult> ReplayMail(int id)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var value = _mailContext.Mail.Include(t => t.MailTag).FirstOrDefault(x => x.MailsId == id);
+            var value = _mailContext.Mail.Include(t => t.MailTag).Include(t => t.Sender).FirstOrDefault(x => x.MailsId == id);
             ReplayMailViewModel replayMailViewModel = new ReplayMailViewModel()
             {
                 MailsID = value.MailsId,
                 Subject = value.Subject + " - Yanıt",
                 MailTag = value.MailTag.TagName,
+                Email = value.Sender.Email,
 
 
             };
@@ -147,9 +154,11 @@ namespace AspnetCoreMessageIdentity.Controllers
                 var FileName = Guid.NewGuid() + Path.GetExtension(replayMailViewModel.formFile.FileName);
                 var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Attachments/", FileName);
                 var stream = new FileStream(location, FileMode.Create);
-                stream.Dispose();
+                replayMailViewModel.formFile.CopyTo(stream);
                 stream.Close();
+                stream.Dispose();
                 replayMailViewModel.Attachment = "/Attachments/" + FileName;
+                replayMailViewModel.AttachmentFileName = replayMailViewModel.formFile.FileName;
             }
             _mailContext.Mail.Add(new Mails
             {
@@ -169,6 +178,8 @@ namespace AspnetCoreMessageIdentity.Controllers
                 SenderId = SenderUser.Id,
 
                 Attachment = replayMailViewModel.Attachment,
+                AttachmentFileName = replayMailViewModel.AttachmentFileName,
+
             });
             _mailContext.SaveChanges();
             TempData["Result"] = "Mesaj Yanıtlandı";
@@ -178,28 +189,28 @@ namespace AspnetCoreMessageIdentity.Controllers
         }
 
 
-        public async Task<IActionResult> UserMails()
+        public async Task<IActionResult> UserMails(int pageNumber = 1)
         {
             var value = await _userManager.FindByNameAsync(User.Identity.Name);
-            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.SenderId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList();
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.SenderId == value.Id && x.IsTrash == false && x.IsDraft == false).ToList().ToPagedList(pageNumber, 10);
             return View(MessageList);
         }
-        public async Task<IActionResult> UserImportantMails()
+        public async Task<IActionResult> UserImportantMails(int pageNumber = 1)
         {
             var value = await _userManager.FindByNameAsync(User.Identity.Name);
-            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false && x.IsImportant == true).ToList();
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == false && x.IsDraft == false && x.IsImportant == true).ToList().ToPagedList(pageNumber, 10);
             return View(MessageList);
         }
-        public async Task<IActionResult> UserDraftMails()
+        public async Task<IActionResult> UserDraftMails(int pageNumber = 1)
         {
             var value = await _userManager.FindByNameAsync(User.Identity.Name);
-            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.SenderId == value.Id && x.IsTrash == false && x.IsDraft == true).ToList();
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.SenderId == value.Id && x.IsTrash == false && x.IsDraft == true).ToList().ToPagedList(pageNumber, 10);
             return View(MessageList);
         }
-        public async Task<IActionResult> UserTrashMails()
+        public async Task<IActionResult> UserTrashMails(int pageNumber = 1)
         {
             var value = await _userManager.FindByNameAsync(User.Identity.Name);
-            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == true || x.SenderId == value.Id && x.IsTrash == true).ToList();
+            var MessageList = _mailContext.Mail.OrderBy(x => x.IsRead).Include(t => t.MailTag).Include(x => x.Sender).Include(x => x.Receiver).Where(x => x.ReceiverId == value.Id && x.IsTrash == true || x.SenderId == value.Id && x.IsTrash == true).ToList().ToPagedList(pageNumber,10);
             return View(MessageList);
         }
         [HttpGet]

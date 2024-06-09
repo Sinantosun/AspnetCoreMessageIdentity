@@ -5,7 +5,9 @@
 }
 
 @using AspnetCoreMessageIdentity.DAL.Entities;
-@model List<Mails>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@model IPagedList<Mails>
 @{
     string TagCss = "";
 
@@ -84,7 +86,7 @@
                     <div class="mail-tools tooltip-demo m-t-md">
                         <div class="btn-group float-right">
 
-                            @*   buraya paged list gelecek *@
+                            @Html.PagedListPager((IPagedList)Model,pageNumber=>Url.Action("UserDraftMails",new {pageNumber}))
 
 
                         </div>

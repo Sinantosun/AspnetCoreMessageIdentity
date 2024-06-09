@@ -22,28 +22,27 @@
         $(function () {
 
             var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7071/SignalRHub").build();
-           
+            var user = "";
             connection.start().then(() => {
                
                 $.ajax({
                     url: "/Mailbox/GetUser",
                     type:'get',
                     success: function (data) {
-                        connection.invoke("GetNickName", data);
+                        console.log(data);
+                        connection.invoke("GetNickName", data.nameSurname);
                         connection.invoke("GetActiveClientCount");
-                        connection.invoke("GetConnId", data);
+                        connection.invoke("GetConnId", data.userName);
+                        user = data.nameSurname;
                        
                     }
                 });
+                $(".testbtn").click(function () {
 
-
-              
-
-                $("#testbtn").click(function () {
-
+                    alert("nice you are clicked");
                     var email = $("#Email").val();
 
-                    connection.invoke("SendMessageAsync", email);
+                    connection.invoke("SendMessageAsync", email,user);
 
                 });
 

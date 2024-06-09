@@ -24,6 +24,7 @@
                     <br />
                     <form method="post" enctype="multipart/form-data">
                     <input type="hidden" asp-for="MailsID" class="form-control">
+                        <input type="hidden" asp-for="Email" id="Email" class="form-control">
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Ek dosyası seçiniz</label>
                             <div class="col-sm-10"><input type="file" asp-for="formFile" class="form-control"></div>
@@ -46,7 +47,7 @@
                         </div>
 
                         <div class="mail-body text-right tooltip-demo">
-                            <button asp-action="ReplayMail" asp-controller="Mailbox" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Gönder"><i class="fa fa-reply"></i> Gönder</button>
+                            <button asp-action="ReplayMail" asp-controller="Mailbox" class="btn btn-sm btn-primary testbtn" data-toggle="tooltip" data-placement="top" title="Gönder"><i class="fa fa-reply"></i> Gönder</button>
                             <button asp-action="MoveMessageToDraftFolder" asp-controller="Mailbox" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Taslak klasörüne taşı"><i class="fa fa-pencil"></i> Taslak</button>
                         </div>
                     </form>

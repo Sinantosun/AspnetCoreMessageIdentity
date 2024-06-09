@@ -1,5 +1,7 @@
 ﻿@using AspnetCoreMessageIdentity.DAL.Entities;
-@model List<Mails>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@model IPagedList<Mails>
 @{
     string cardCss = "";
     string TagCss = "";
@@ -105,10 +107,10 @@
                     <div class="mail-tools tooltip-demo m-t-md">
                         <div class="btn-group float-right">
 
-                            @*   buraya paged list gelecek *@
+                            @Html.PagedListPager((IPagedList)Model,pageNumber =>Url.Action("UserImportantMails",new {pageNumber}))
 
 
-                        </div>
+                    </div>
                         <a href="/Mailbox/UserImportantMails" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Mesajları yenile"><i class="fa fa-refresh"></i> Yenile</a>
                         <button onclick="getSelectedCheckboxesForReadMarkFolder()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Okundu olarak işaretle"><i class="fa fa-eye"></i> </button>
                         <button onclick="getSelectedCheckboxesForTrashFolder()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Çöp Kutusuna Taşı"><i class="fa fa-trash-o"></i> </button>

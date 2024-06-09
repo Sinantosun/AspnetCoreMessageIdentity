@@ -29,7 +29,7 @@
                         <input type="hidden" asp-for="MailsId" class="form-control">
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">İletilecek email adres: *</label>
-                            <div class="col-sm-10"><input type="text" asp-for="Email" class="form-control"></div>
+                            <div class="col-sm-10"><input type="text" id="Email" asp-for="Email" class="form-control"></div>
                         </div>
                         <div class="mail-text h-200">
                             <label class="col-sm-2 col-form-label">İleteceğiniz mail içeriği </label>
@@ -38,7 +38,7 @@
                         </div>
 
                         <div class="mail-body text-right tooltip-demo">
-                            <button asp-action="ForwardMail" asp-controller="Mailbox" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Gönder"><i class="fa fa-reply"></i> Gönder</button>
+                            <button asp-action="ForwardMail" asp-controller="Mailbox" class="btn btn-sm btn-primary testbtn" data-toggle="tooltip" data-placement="top" title="Gönder"><i class="fa fa-reply"></i> Gönder</button>
                         </div>
                     </form>
                 </div>

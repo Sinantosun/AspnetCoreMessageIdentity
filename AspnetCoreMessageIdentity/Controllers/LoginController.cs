@@ -1,4 +1,5 @@
 ﻿using AspnetCoreMessageIdentity.DAL.Entities;
+using AspnetCoreMessageIdentity.Data;
 using AspnetCoreMessageIdentity.Models.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -60,6 +61,13 @@ namespace AspnetCoreMessageIdentity.Controllers
         }
         public async Task<IActionResult> SignOut()
         {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var client = ClientSources.userClients.FirstOrDefault(x => x.NameSurname == user.NameSurname);
+            if (client != null)
+            {
+                ClientSources.userClients.Remove(client);
+            }
+
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index");
         }
