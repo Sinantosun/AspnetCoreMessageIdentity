@@ -5,6 +5,29 @@ Merhaba,
 Bu projede, kullanıcılar kendi aralarında mesaj gönderebilir, gönderilen mesajlar yanıtlanabilir ve mesajları başka kullanıcılara iletebilir,
 mesajları taslak olarak kaydedebilir, mesajlarını çöp kutusuna taşıyabilir, gönderdikleri mesajları ve kendisine gelen önemli mesajları görüntüleyebilir.
 
+<h1>Identity Kütüphanesi</h1>
+
+![image](https://github.com/Sinantosun/AspnetCoreMessageIdentity/assets/145317724/4f2899c9-7d66-404c-b44c-f30b3cfde419)
+
+📌 Kullanıcılar 5 defa hatalı giriş yaptığında sistem tarafından otomatik olarak 5 dakika boyunca engellenir.
+
+<h1>SignalR Kütühanesi</h1>
+<h3>SignalR Nedir ?</h3>
+📌 SignalR, gerçek zamanlı uygulamalar geliştirmek için yazılmış açık kaynak kodlu bir .NET kütüphanedir. Normal HTTP bağlantılarında client-server iletişimi her istekte yenilenirken, SignalR ile client ve server arasında sürekli bir bağlantı sağlanır.
+📌 Aşağıdaki Görsel de bir kullanıcı giriş yaptıktan sonra aktif olan bütün kullanıcılara görseldeki gibi bilidirm gitmektedir.
+📌 Bu olay mesaj gönderme işleminde de kullanılmıştır, kullanıcı mesaj gönderdiğinde sadece mesajın gideceği kişinin tarayıcısında "Yeni Mesajınız Var" şeklinde bildirim gidecektir.
+
+![image](https://github.com/Sinantosun/AspnetCoreMessageIdentity/assets/145317724/8a306cd0-6b21-4959-978c-6d8dadcc3f95)
+
+<h1>AutoMapper Kütüphanesi</h1>
+<h3>AutoMapper Nedir ?</h3>
+
+📌 AutoMapper; farklı veri nesnelerinin otomatik olarak eşleştirilerek dönüştürülmesini ve kopyalanmasını kolaylaştıran bir kütüphanedir. 
+    📌 (örneğin mail adında bir entitymizin olduğunu ve bu entitynin birden cok propertysi olduğunu düşünelim CreateMailViewModel adında bir sınıf oluşturduğumuzda bu sınıfa bütün propertyleri tek tek atamamız gereklidir. AutoMapper işte tam burada kullanılır
+        birden cok nesneyi tek tek atamak yerine otomatik olarak verdiğimiz sınıflari birbiyle eşler.
+        Dikkat ! : verilerin eşitlenmesi için entity sınıfı ve oluşturulan ViewModel/Dto sınıflarının propertylerinin birebir aynı olması gereklidir aksi halde eşitleme işlemi başarıylı olamaz.
+📌 mesaj gönderilirken, yanıtlanırken ve iletilirken automaper kullanılmıştır.
+
 <h1>Dashboard Alanı</h1>
 
 ![image](https://github.com/Sinantosun/AspnetCoreMessageIdentity/assets/145317724/7f6b27a2-7d46-4f28-a4a0-5b7d695428f2)
@@ -49,12 +72,6 @@ mesajları taslak olarak kaydedebilir, mesajlarını çöp kutusuna taşıyabili
 ![image](https://github.com/Sinantosun/AspnetCoreMessageIdentity/assets/145317724/df5bad34-a5d0-489e-8c28-5a2b2b58ce5c)
 
 📌 Kullanıcı sildiği mesajları buradan görüntüler.
-
-İlk kısım bitti :)
-
-Projede kalan eksikleri tamamlayıp, SignalR Kütüphanesini dahil edeceğim.
-
-SignalR ile oturum açılma işlemleri, mesaj gittikten sonra anlık bildirim gibi özellikleri ekliyeceğim.
 
 
 
