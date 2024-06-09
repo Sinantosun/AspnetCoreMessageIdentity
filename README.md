@@ -8,8 +8,16 @@ mesajları taslak olarak kaydedebilir, mesajlarını çöp kutusuna taşıyabili
 <h1>Identity Kütüphanesi</h1>
 
 ![image](https://github.com/Sinantosun/AspnetCoreMessageIdentity/assets/145317724/4f2899c9-7d66-404c-b44c-f30b3cfde419)
+📌 Identity kütüphanesi içinde hazır olarak bir çok tablo ve bu tablolara ait propertyler barındırır. <br> bunlardan bazıları 
+    <ul>
+        <li>AspNetUsers : bu tablo kayıtlı kullanıcıların tutulacağı otomatik olarak gelen tablodur içinde email telefon numarası şifre kullanıcı adı gibi veriler yer alır bu tabloya ayrıca kendi istediğimiz verilerin eklenmesi de mümkündür.</li>
+        <li>AspNetRoles : bu tablo kullanıcılara rol atama işlemlerinde rol adlarının belirlenmesinde kullanılmaktadır.</li>
+        <li>AspNetUserRoles : Son olarak bu tablo  ise yukarda bahsettiğim iki tablo ile ilişkilidir ve hangi kullanıcının hangi rolu olduğu buradan anlaşılır</li>
+    </ul>
+📌 Projenin güvenlik tarafında kullanılmıştır.<br>br>
+📌 Kullanıcılar 5 defa hatalı giriş yaptığında sistem tarafından otomatik olarak 5 dakika boyunca engellenir.<br>br>
 
-📌 Kullanıcılar 5 defa hatalı giriş yaptığında sistem tarafından otomatik olarak 5 dakika boyunca engellenir.
+📌 AspNetCore da AppUser ve AppRole olarak iki tablo oluşturulursa bu oluşturulan iki tablonunun da id değerlerinin aynı olması gereklidir yani aslında AppUser tablosunun id özelliği int ise AppRole tablosunun da int olmalıdır bu işlem tablolar arasında ilişki sağlanabilmesi için önemlidir.
 
 <h1>SignalR Kütühanesi</h1>
 <h3>SignalR Nedir ?</h3>
