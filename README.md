@@ -8,7 +8,7 @@ mesajları taslak olarak kaydedebilir, mesajlarını çöp kutusuna taşıyabili
 <h1>Identity Kütüphanesi</h1>
 
 ![image](https://github.com/Sinantosun/AspnetCoreMessageIdentity/assets/145317724/4f2899c9-7d66-404c-b44c-f30b3cfde419)
-📌 Identity kütüphanesi içinde hazır olarak bir çok tablo ve bu tablolara ait propertyler barındırır. <br> bunlardan bazıları 
+📌 Identity kütüphanesi içinde hazır olarak bir çok tablo ve bu tablolara ait propertyler barındırır.
     <ul>
         <li>AspNetUsers : bu tablo kayıtlı kullanıcıların tutulacağı otomatik olarak gelen tablodur içinde email telefon numarası şifre kullanıcı adı gibi veriler yer alır bu tabloya ayrıca kendi istediğimiz verilerin eklenmesi de mümkündür.</li><br>
         <li>AspNetRoles : bu tablo kullanıcılara rol atama işlemlerinde rol adlarının belirlenmesinde kullanılmaktadır.</li><br>
