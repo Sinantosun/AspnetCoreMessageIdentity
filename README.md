@@ -14,8 +14,8 @@ mesajları taslak olarak kaydedebilir, mesajlarını çöp kutusuna taşıyabili
         <li>AspNetRoles : bu tablo kullanıcılara rol atama işlemlerinde rol adlarının belirlenmesinde kullanılmaktadır.</li><br>
         <li>AspNetUserRoles : Son olarak bu tablo  ise yukarda bahsettiğim iki tablo ile ilişkilidir ve hangi kullanıcının hangi rolu olduğu buradan anlaşılır</li><br>
     </ul>
-📌 Projenin güvenlik tarafında kullanılmıştır.<br>br>
-📌 Kullanıcılar 5 defa hatalı giriş yaptığında sistem tarafından otomatik olarak 5 dakika boyunca engellenir.<br>br>
+📌 Projenin güvenlik tarafında kullanılmıştır.<br><br>
+📌 Kullanıcılar 5 defa hatalı giriş yaptığında sistem tarafından otomatik olarak 5 dakika boyunca engellenir.<br><br>
 
 📌 AspNetCore da AppUser ve AppRole olarak iki tablo oluşturulursa bu oluşturulan iki tablonunun da id değerlerinin aynı olması gereklidir yani aslında AppUser tablosunun id özelliği int ise AppRole tablosunun da int olmalıdır bu işlem tablolar arasında ilişki sağlanabilmesi için önemlidir.
 
