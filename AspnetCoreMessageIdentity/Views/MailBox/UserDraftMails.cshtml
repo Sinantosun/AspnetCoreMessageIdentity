@@ -58,7 +58,7 @@
                         });
 
                         $.ajax({
-                            url: '/Mailbox/MoveToTrashFolder',
+                            url: '/Mailbox/MoveMessageToTrashFolder',
                             method: 'post',
                             data: { items: selected },
                             success: function () {
@@ -116,7 +116,7 @@
                                         <input type="checkbox" name="MarkChekbox" value="@item.MailsId" class="i-checks checkbox">
                                     </td>
 
-                                    <td class="mail-ontact"><i class="fa fa-user text-primary" aria-hidden="true"></i> <a style="text-transform:capitalize" href="/Mailbox/EditDraft/@item.MailsId">&nbsp; @item.Sender.NameSurname</a><span class="label @TagCss float-right">@item.MailTag.TagName</span></td>
+                                    <td class="mail-ontact"><i class="fa fa-user text-primary" aria-hidden="true"></i> <a style="text-transform:capitalize" href="/Mailbox/EditDraft/@item.MailsId">&nbsp; @item.Receiver.NameSurname</a><span class="label @TagCss float-right">@item.MailTag.TagName</span></td>
                                     <td class="mail-subject"><a href="/Mailbox/EditDraft/@item.MailsId"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp; @(item.Subject.Length > 20 ? item.Subject.Substring(0, 20) + "..." : item.Subject)</a></td>
                                     @if (item.Attachment != null)
                                     {

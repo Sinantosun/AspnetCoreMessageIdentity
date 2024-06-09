@@ -42,10 +42,10 @@
                 });
             });
 
-            function getSelectedCheckboxesForTrashFolder() {
+            function getSelectedCheckboxesForHistory() {
                 Swal.fire({
                     title: "Emin misiniz?",
-                    text: "Seçili kayıtlar çöp kutusuna taşınsın mı?",
+                    text: "Seçili kayıtları geri yüklemek istediğinize emin misiniz ?",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
@@ -61,7 +61,7 @@
                         });
 
                         $.ajax({
-                            url: '/Mailbox/MoveToTrashFolder',
+                            url: '/Mailbox/MoveToMailboxFolder',
                             method: 'post',
                             data: { items: selected },
                             success: function () {
@@ -71,8 +71,35 @@
                     }
                 });
 
+            }
+            function getSelectedCheckboxesForDelete(){
+                Swal.fire({
+                    title: "Emin misiniz?",
+                    text: "Seçili kayıtları kalıcı olarak silmek istediğinize emin misiniz? bu işlem geri alınamaz.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Evet",
+                    cancelButtonText: "Vazgeç",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var checkboxes = document.querySelectorAll('input[name="MarkChekbox"]:checked');
+                        var selected = [];
+                        checkboxes.forEach((checkbox) => {
+                            selected.push(checkbox.value);
+                        });
 
-
+                        $.ajax({
+                            url: '/Mailbox/DeleteMessage',
+                            method: 'post',
+                            data: { items: selected },
+                            success: function () {
+                                window.location.reload(true);
+                            }
+                        });
+                    }
+                });
             }
         </script>
         @if (Model.Count > 0)
@@ -91,10 +118,10 @@
 
 
                         </div>
-                        <a href="/Mailbox/UserDraftMails" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Çöp kutusunu yenile"><i class="fa fa-refresh"></i> Yenile</a>
-                        <a href="/Mailbox/UserDraftMails" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Seçilen mesajları geri yükle"><i class="fa fa-history"></i> Geri Yükle</a>
-                        <button onclick="getSelectedCheckboxesForTrashFolder()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Tüm mesajları sil"><i class="fa fa-trash-o"></i> </button>
-                        <button onclick="getSelectedCheckboxesForTrashFolder()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Seçilenleri Sil"><i class="fa fa-trash"></i> </button>
+                        <a href="/Mailbox/UserTrashMails" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Çöp kutusunu yenile"><i class="fa fa-refresh"></i> Yenile</a>
+                        <button onclick="getSelectedCheckboxesForHistory()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Geri Yükle"><i class="fa fa-history"></i> </button>
+                        <button onclick="getSelectedCheckboxesForDelete()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Seçilenleri Sil"><i class="fa fa-trash"></i> </button>
+                   
                     </div>
 
                 </div>

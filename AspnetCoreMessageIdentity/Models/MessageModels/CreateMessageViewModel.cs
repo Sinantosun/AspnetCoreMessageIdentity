@@ -10,6 +10,7 @@ namespace AspnetCoreMessageIdentity.Models.MessageModels
         public string Email { get; set; }
         public string Content { get; set; }
         public string? Attachment { get; set; }
+        public string? AttachmentFileName { get; set; }
         public bool IsImportant { get; set; }
         public bool IsDraft { get; set; }
         public int MailTagsID { get; set; }

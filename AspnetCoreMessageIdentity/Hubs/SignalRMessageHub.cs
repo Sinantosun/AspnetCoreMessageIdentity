@@ -15,11 +15,6 @@ namespace AspnetCoreMessageIdentity.Hubs
             _userManager = userManager;
         }
 
-        public async Task GetConnectionId()
-        {
-            await Clients.All.SendAsync("connectionIdParamter", Context.ConnectionId);
-        }
-
         public async Task GetNickName(string nickname)
         {
             UserClient userClient = new UserClient()
@@ -28,9 +23,15 @@ namespace AspnetCoreMessageIdentity.Hubs
                 NameSurname = nickname,
             };
 
-            await Clients.Others.SendAsync("clientJoined", nickname);
+
+            await Clients.Others.SendAsync("clientJoined", nickname.ToUpper());
 
             ClientSources.userClients.Add(userClient);
+        }
+
+        public async Task GetActiveClientCount()
+        {
+            await Clients.All.SendAsync("ReciveActiveClientCount", ClientSources.userClients.Count());
         }
 
         public async Task SendMessageAsync(string email)
@@ -38,7 +39,7 @@ namespace AspnetCoreMessageIdentity.Hubs
             var user = await _userManager.FindByEmailAsync(email);
             
             UserClient client = ClientSources.userClients.FirstOrDefault(x => x.NameSurname.ToLower() == user.NameSurname.ToLower());
-            await Clients.Client(client.ConnectionId).SendAsync("reciveMessage", "Yeni Mesajınız Var");
+            await Clients.Client(client.ConnectionId).SendAsync("reciveMessage","sinan Size Yeni Bir Mesaj Gönderdi");
         }
     }
 }
