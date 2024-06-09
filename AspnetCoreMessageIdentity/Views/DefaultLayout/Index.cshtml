@@ -22,22 +22,33 @@
         $(function () {
 
             var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7071/SignalRHub").build();
-
+           
             connection.start().then(() => {
-        @if (TempData["UserNameSurname"] != null)
-        {
-            <text>connection.invoke("GetNickName", "@TempData["UserNameSurname"].ToString()"); </text>
-            TempData["UserNameSurname"] = null;
-        }
-                    $("#testbtn").click(function () {
+               
+                $.ajax({
+                    url: "/Mailbox/GetUser",
+                    type:'get',
+                    success: function (data) {
+                        connection.invoke("GetNickName", data);
+                        connection.invoke("GetActiveClientCount");
+                        connection.invoke("GetConnId", data);
+                       
+                    }
+                });
 
-                        var email = $("#Email").val();
 
-                        connection.invoke("SendMessageAsync", email);
+              
 
-                    });
+                $("#testbtn").click(function () {
 
-                connection.invoke("GetActiveClientCount");
+                    var email = $("#Email").val();
+
+                    connection.invoke("SendMessageAsync", email);
+
+                });
+
+
+             
 
             }).catch((err) => { console.log(err); });
 
@@ -60,7 +71,6 @@
 
             });
 
-
             connection.on("reciveMessage", data => {
                 Toast.fire({
                     icon: "info",
@@ -71,8 +81,6 @@
             connection.on("ReciveActiveClientCount", data => {
                 $("#ActiveClientCount").text(data);
             });
-
-
         });
 
     </script>

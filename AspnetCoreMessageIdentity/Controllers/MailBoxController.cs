@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace AspnetCoreMessageIdentity.Controllers
 {
@@ -12,13 +13,18 @@ namespace AspnetCoreMessageIdentity.Controllers
     {
         private readonly MailContext _mailContext;
         private readonly UserManager<AppUser> _userManager;
-
         public MailBoxController(MailContext mailContext, UserManager<AppUser> userManager)
         {
             _mailContext = mailContext;
             _userManager = userManager;
         }
+        public async Task<JsonResult> GetUser()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
+            return Json(user.NameSurname);
+
+        }
         async Task loadDrdopwn()
         {
             var MailTagList = _mailContext.MailTags.ToList();
@@ -82,7 +88,7 @@ namespace AspnetCoreMessageIdentity.Controllers
                     IsDraft = createMessageViewModel.IsDraft,
                     IsImportant = createMessageViewModel.IsImportant,
                     IsForwad = false,
-                    
+
                     IsRead = false,
                     AttachmentFileName = createMessageViewModel.AttachmentFileName,
                     IsReply = false,
@@ -304,8 +310,8 @@ namespace AspnetCoreMessageIdentity.Controllers
                 Email = value.Receiver.Email,
                 MailTagsID = value.MailTagsID,
                 Subject = value.Subject,
-                AttachmentFileName=value.AttachmentFileName,
-                Attachment=value.Attachment,
+                AttachmentFileName = value.AttachmentFileName,
+                Attachment = value.Attachment,
                 MailsID = id,
                 Content = value.Content,
 
@@ -336,7 +342,7 @@ namespace AspnetCoreMessageIdentity.Controllers
             value.Content = createMessageViewModel.Content;
             value.Subject = createMessageViewModel.Subject;
             value.ReceiverId = user.Id;
-            
+
             value.MailTagsID = createMessageViewModel.MailTagsID;
             value.Date = DateTime.Now;
             value.IsImportant = createMessageViewModel.IsImportant;

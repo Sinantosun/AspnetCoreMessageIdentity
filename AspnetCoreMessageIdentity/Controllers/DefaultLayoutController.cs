@@ -10,6 +10,7 @@ namespace AspnetCoreMessageIdentity.Controllers
             return View();
         }
 
+      
 
         public PartialViewResult DefaultHeaderPartial()
         {

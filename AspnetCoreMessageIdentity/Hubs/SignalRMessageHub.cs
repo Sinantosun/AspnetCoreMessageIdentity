@@ -3,6 +3,7 @@ using AspnetCoreMessageIdentity.Data;
 using AspnetCoreMessageIdentity.Models.SignalRModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace AspnetCoreMessageIdentity.Hubs
 {
@@ -17,16 +18,29 @@ namespace AspnetCoreMessageIdentity.Hubs
 
         public async Task GetNickName(string nickname)
         {
-            UserClient userClient = new UserClient()
+            var client = ClientSources.userClients.FirstOrDefault(x => x.NameSurname == nickname);
+            if (client == null)
             {
-                ConnectionId = Context.ConnectionId,
-                NameSurname = nickname,
-            };
+                UserClient userClient = new UserClient()
+                {
+                    ConnectionId = Context.ConnectionId,
+                    NameSurname = nickname,
+                };
 
 
-            await Clients.Others.SendAsync("clientJoined", nickname.ToUpper());
+                await Clients.Others.SendAsync("clientJoined", nickname.ToUpper());
 
-            ClientSources.userClients.Add(userClient);
+                ClientSources.userClients.Add(userClient);
+            }
+
+
+        }
+
+        public async Task GetConnId(string name)
+        {
+            var client = ClientSources.userClients.FirstOrDefault(x => x.NameSurname == name);
+            client.ConnectionId = Context.ConnectionId;
+
         }
 
         public async Task GetActiveClientCount()
@@ -37,9 +51,9 @@ namespace AspnetCoreMessageIdentity.Hubs
         public async Task SendMessageAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            
+
             UserClient client = ClientSources.userClients.FirstOrDefault(x => x.NameSurname.ToLower() == user.NameSurname.ToLower());
-            await Clients.Client(client.ConnectionId).SendAsync("reciveMessage","sinan Size Yeni Bir Mesaj Gönderdi");
+            await Clients.Client(client.ConnectionId).SendAsync("reciveMessage", "sinan Size Yeni Bir Mesaj Gönderdi");
         }
     }
 }

@@ -4,6 +4,6 @@ namespace AspnetCoreMessageIdentity.Data
 {
     public static class ClientSources
     {
-        public static List<UserClient> userClients { get; } = new List<UserClient>();
+        public static List<UserClient> userClients { get; set; } = new List<UserClient>();
     }
 }
