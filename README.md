@@ -13,19 +13,19 @@ mesajları taslak olarak kaydedebilir, mesajlarını çöp kutusuna taşıyabili
 
 <h1>SignalR Kütühanesi</h1>
 <h3>SignalR Nedir ?</h3>
-📌 SignalR, gerçek zamanlı uygulamalar geliştirmek için yazılmış açık kaynak kodlu bir .NET kütüphanedir. Normal HTTP bağlantılarında client-server iletişimi her istekte yenilenirken, SignalR ile client ve server arasında sürekli bir bağlantı sağlanır.
-📌 Aşağıdaki Görsel de bir kullanıcı giriş yaptıktan sonra aktif olan bütün kullanıcılara görseldeki gibi bilidirm gitmektedir.
-📌 Bu olay mesaj gönderme işleminde de kullanılmıştır, kullanıcı mesaj gönderdiğinde sadece mesajın gideceği kişinin tarayıcısında "Yeni Mesajınız Var" şeklinde bildirim gidecektir.
+📌 SignalR, gerçek zamanlı uygulamalar geliştirmek için yazılmış açık kaynak kodlu bir .NET kütüphanedir. Normal HTTP bağlantılarında client-server iletişimi her istekte yenilenirken, SignalR ile client ve server arasında sürekli bir bağlantı sağlanır.<br>
+📌 Aşağıdaki Görsel de bir kullanıcı giriş yaptıktan sonra aktif olan bütün kullanıcılara görseldeki gibi bilidirm gitmektedir.<br>
+📌 Bu olay mesaj gönderme işleminde de kullanılmıştır, kullanıcı mesaj gönderdiğinde sadece mesajın gideceği kişinin tarayıcısında "Yeni Mesajınız Var" şeklinde bildirim gidecektir.<br>
 
 ![image](https://github.com/Sinantosun/AspnetCoreMessageIdentity/assets/145317724/8a306cd0-6b21-4959-978c-6d8dadcc3f95)
 
 <h1>AutoMapper Kütüphanesi</h1>
 <h3>AutoMapper Nedir ?</h3>
 
-📌 AutoMapper; farklı veri nesnelerinin otomatik olarak eşleştirilerek dönüştürülmesini ve kopyalanmasını kolaylaştıran bir kütüphanedir. 
+📌 AutoMapper; farklı veri nesnelerinin otomatik olarak eşleştirilerek dönüştürülmesini ve kopyalanmasını kolaylaştıran bir kütüphanedir. <br>
     📌 (örneğin mail adında bir entitymizin olduğunu ve bu entitynin birden cok propertysi olduğunu düşünelim CreateMailViewModel adında bir sınıf oluşturduğumuzda bu sınıfa bütün propertyleri tek tek atamamız gereklidir. AutoMapper işte tam burada kullanılır
         birden cok nesneyi tek tek atamak yerine otomatik olarak verdiğimiz sınıflari birbiyle eşler.
-        Dikkat ! : verilerin eşitlenmesi için entity sınıfı ve oluşturulan ViewModel/Dto sınıflarının propertylerinin birebir aynı olması gereklidir aksi halde eşitleme işlemi başarıylı olamaz.
+        Dikkat ! : verilerin eşitlenmesi için entity sınıfı ve oluşturulan ViewModel/Dto sınıflarının propertylerinin birebir aynı olması gereklidir aksi halde eşitleme işlemi başarıylı olamaz.<br>
 📌 mesaj gönderilirken, yanıtlanırken ve iletilirken automaper kullanılmıştır.
 
 <h1>Dashboard Alanı</h1>
