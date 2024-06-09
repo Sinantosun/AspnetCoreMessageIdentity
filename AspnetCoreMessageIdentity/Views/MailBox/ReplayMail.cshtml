@@ -23,7 +23,7 @@
                     <br />
                     <br />
                     <form method="post" enctype="multipart/form-data">
-                    <input type="hidden" asp-for="MailsID" class="form-control">
+                    <input type="hidden" asp-for="ReplayMailViewModelId" class="form-control">
                         <input type="hidden" asp-for="Email" id="Email" class="form-control">
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Ek dosyası seçiniz</label>
@@ -32,7 +32,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Mesaj kategorisi *</label>
 
-                            <div class="col-sm-10"><input type="text" asp-for="MailTag" readonly class="form-control"></div>
+                            <div class="col-sm-10"><input type="text" asp-for="MailTagName" readonly class="form-control"></div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Mesaj Başlığı: *</label>
@@ -56,7 +56,7 @@
                     </div>
                     <div style="display:flex; justify-content:center; align-items:center;" class="form-group row">
                         <br />
-                        @await Component.InvokeAsync("_MessageDetailComponentPartial",new {@id=Model.MailsID})
+                        @await Component.InvokeAsync("_MessageDetailComponentPartial",new {@id=Model.ReplayMailViewModelId})
                     </div>
                  
                 </div>

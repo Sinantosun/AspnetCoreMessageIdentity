@@ -1,6 +1,7 @@
 ﻿using AspnetCoreMessageIdentity.DAL.Context;
 using AspnetCoreMessageIdentity.DAL.Entities;
 using AspnetCoreMessageIdentity.Models.MessageModels;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,11 +15,13 @@ namespace AspnetCoreMessageIdentity.Controllers
     public class MailBoxController : Controller
     {
         private readonly MailContext _mailContext;
+        private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
-        public MailBoxController(MailContext mailContext, UserManager<AppUser> userManager)
+        public MailBoxController(MailContext mailContext, UserManager<AppUser> userManager, IMapper mapper)
         {
             _mailContext = mailContext;
             _userManager = userManager;
+            _mapper = mapper;
         }
         public async Task<JsonResult> GetUser()
         {
@@ -87,28 +90,14 @@ namespace AspnetCoreMessageIdentity.Controllers
 
 
                 }
-                _mailContext.Mail.Add(new Mails
-                {
-                    Content = createMessageViewModel.Content,
-                    Date = DateTime.Now,
-                    IsDraft = createMessageViewModel.IsDraft,
-                    IsImportant = createMessageViewModel.IsImportant,
-                    IsForwad = false,
-
-                    IsRead = false,
-                    AttachmentFileName = createMessageViewModel.AttachmentFileName,
-                    IsReply = false,
-                    IsTrash = false,
-                    MailTagsID = createMessageViewModel.MailTagsID,
-                    Subject = createMessageViewModel.Subject,
-                    ReceiverId = ReciverUser.Id,
-                    SenderId = SenderUser.Id,
-
-                    Attachment = createMessageViewModel.Attachment,
-                });
+                var mappedValue = _mapper.Map<Mails>(createMessageViewModel);
+                mappedValue.ReceiverId = ReciverUser.Id;
+                mappedValue.Date = DateTime.Now;
+                mappedValue.SenderId = SenderUser.Id;
+                _mailContext.Mail.Add(mappedValue);
+                _mailContext.SaveChanges();
                 TempData["Result"] = "Mesajınız Gönderildi";
                 TempData["icon"] = "success";
-                _mailContext.SaveChanges();
             }
             else
             {
@@ -124,10 +113,11 @@ namespace AspnetCoreMessageIdentity.Controllers
             var value = _mailContext.Mail.Include(t => t.MailTag).Include(t => t.Sender).FirstOrDefault(x => x.MailsId == id);
             ReplayMailViewModel replayMailViewModel = new ReplayMailViewModel()
             {
-                MailsID = value.MailsId,
+                
                 Subject = value.Subject + " - Yanıt",
-                MailTag = value.MailTag.TagName,
+                MailTagName = value.MailTag.TagName,
                 Email = value.Sender.Email,
+                ReplayMailViewModelId = id,
 
 
             };
@@ -147,7 +137,7 @@ namespace AspnetCoreMessageIdentity.Controllers
         [HttpPost]
         public async Task<IActionResult> ReplayMail(ReplayMailViewModel replayMailViewModel)
         {
-            var mailUser = _mailContext.Mail.Include(t => t.Sender).Include(t => t.MailTag).FirstOrDefault(x => x.MailsId == replayMailViewModel.MailsID);
+            var mailUser = _mailContext.Mail.Include(t => t.Sender).Include(t => t.MailTag).FirstOrDefault(x => x.MailsId == replayMailViewModel.ReplayMailViewModelId);
             var SenderUser = await _userManager.FindByNameAsync(User.Identity.Name);
             if (replayMailViewModel.formFile != null)
             {
@@ -160,31 +150,20 @@ namespace AspnetCoreMessageIdentity.Controllers
                 replayMailViewModel.Attachment = "/Attachments/" + FileName;
                 replayMailViewModel.AttachmentFileName = replayMailViewModel.formFile.FileName;
             }
-            _mailContext.Mail.Add(new Mails
-            {
-                MailReplyId = replayMailViewModel.MailsID,
-                Content = replayMailViewModel.Content,
-                Date = DateTime.Now,
-                IsDraft = replayMailViewModel.IsDraft,
-                IsImportant = replayMailViewModel.IsImportant,
-                IsForwad = false,
-                IsRead = false,
-                IsReply = true,
-                IsTrash = false,
-                IsReplyDate = DateTime.Now,
-                MailTagsID = mailUser.MailTag.MailTagsID,
-                Subject = replayMailViewModel.Subject,
-                ReceiverId = mailUser.Sender.Id,
-                SenderId = SenderUser.Id,
-
-                Attachment = replayMailViewModel.Attachment,
-                AttachmentFileName = replayMailViewModel.AttachmentFileName,
-
-            });
+            var mappedValue = _mapper.Map<Mails>(replayMailViewModel);
+            mappedValue.MailReplyId = replayMailViewModel.ReplayMailViewModelId;
+            mappedValue.IsReply = true;
+            mappedValue.Date = DateTime.Now;
+            mappedValue.MailTagsID = mailUser.MailTag.MailTagsID;
+            mappedValue.IsReplyDate = DateTime.Now;
+            mappedValue.ReceiverId = mailUser.Sender.Id;
+            mappedValue.SenderId = SenderUser.Id;
+            _mailContext.Mail.Add(mappedValue);
             _mailContext.SaveChanges();
             TempData["Result"] = "Mesaj Yanıtlandı";
             TempData["icon"] = "success";
             return RedirectToAction("Index");
+      
 
         }
 
@@ -220,7 +199,7 @@ namespace AspnetCoreMessageIdentity.Controllers
             ForwadMailViewModel forwadMailViewModel = new ForwadMailViewModel()
             {
 
-                MailsId = id,
+                ForwadMailViewModelID = id,
                 Content = value.Content,
 
             };
@@ -230,29 +209,22 @@ namespace AspnetCoreMessageIdentity.Controllers
         public async Task<IActionResult> ForwardMail(ForwadMailViewModel forwadMailViewModel)
         {
 
-            var mailUser = _mailContext.Mail.Include(t => t.Sender).Include(t => t.MailTag).FirstOrDefault(x => x.MailsId == forwadMailViewModel.MailsId);
+            var mailUser = _mailContext.Mail.Include(t => t.Sender).Include(t => t.MailTag).FirstOrDefault(x => x.MailsId == forwadMailViewModel.ForwadMailViewModelID);
             var SenderUser = await _userManager.FindByNameAsync(User.Identity.Name);
             var finByMail = await _userManager.FindByEmailAsync(forwadMailViewModel.Email);
-            _mailContext.Mail.Add(new Mails
-            {
-                Content = mailUser.Content,
-                Date = DateTime.Now,
-                ForwadDate = DateTime.Now,
-                IsDraft = false,
-                IsImportant = false,
-                IsForwad = true,
-                IsRead = false,
-                MailForwardId = forwadMailViewModel.MailsId,
 
-                IsReply = false,
-                IsTrash = false,
-                MailTagsID = mailUser.MailTag.MailTagsID,
-                Subject = mailUser.Subject,
-                ReceiverId = finByMail.Id,
-                SenderId = SenderUser.Id,
-                OldUserId = mailUser.SenderId,
-                Attachment = mailUser.Attachment,
-            });
+            var mappedValue = _mapper.Map<Mails>(forwadMailViewModel);
+            mappedValue.Date = DateTime.Now;
+            mappedValue.ReceiverId = finByMail.Id;
+            mappedValue.SenderId = SenderUser.Id;
+            mappedValue.OldUserId = mailUser.SenderId;
+            mappedValue.MailTagsID = mailUser.MailTag.MailTagsID;
+            mappedValue.Content = mailUser.Content;
+            mappedValue.ForwadDate = DateTime.Now;
+            mappedValue.Subject = mailUser.Subject + "(İletildi)";
+            mappedValue.IsForwad = true;
+            mappedValue.MailForwardId = forwadMailViewModel.ForwadMailViewModelID;
+            _mailContext.Mail.Add(mappedValue);
             _mailContext.SaveChanges();
             TempData["Result"] = "Mesaj İletildi";
             TempData["icon"] = "success";
@@ -298,7 +270,15 @@ namespace AspnetCoreMessageIdentity.Controllers
             TempData["icon"] = "success";
             return RedirectToAction("Index");
         }
-
+        public IActionResult MoveToTrashFolderSingleMessage(int id)
+        {
+            var value = _mailContext.Mail.Find(id);
+            value.IsTrash = true;
+            _mailContext.SaveChanges();
+            TempData["Result"] = "Öğe çöp kutusuna taşındı";
+            TempData["icon"] = "success";
+            return RedirectToAction("Index");
+        }
 
         public async Task<IActionResult> MoveMessageToDraftFolder(CreateMessageViewModel createMessageViewModel)
         {
@@ -348,7 +328,6 @@ namespace AspnetCoreMessageIdentity.Controllers
                 value.Attachment = createMessageViewModel.Attachment;
 
             }
-
             value.IsDraft = false;
             value.Content = createMessageViewModel.Content;
             value.Subject = createMessageViewModel.Subject;
@@ -357,6 +336,7 @@ namespace AspnetCoreMessageIdentity.Controllers
             value.MailTagsID = createMessageViewModel.MailTagsID;
             value.Date = DateTime.Now;
             value.IsImportant = createMessageViewModel.IsImportant;
+
             _mailContext.SaveChanges();
             TempData["Result"] = "Mesaj Gönderildi";
             TempData["icon"] = "success";

@@ -1,0 +1,36 @@
+ if (User.Identity.Name != null)
+ {
+     var client = _httpClientFactory.CreateClient();
+     var user = await _userManager.FindByNameAsync(User.Identity.Name);
+     if (user != null)
+     {
+         var responseMessagae = await client.PutAsync($"https://localhost:7120/api/product/{id},{user.Id}", null);
+         var jsonData = await responseMessagae.Content.ReadAsStringAsync();
+         if (jsonData == "01U")
+         {
+             _notifcationService.WarningNotification("Bu işlem için bakıyeniz yetersiz.", "Uyarı");
+             return Json("RefresPage");
+         }
+         else if (jsonData== "01P")
+         {
+             _notifcationService.WarningNotification("Bu Ürün Zaten Hedefe Ulaşmış Olabilir", "Bilgi");
+             return Json("RefresPage");
+         }
+         else
+         {
+             var values = JsonConvert.DeserializeObject<ProductUpdateDto>(jsonData);
+             return Json(values);
+         }
+
+     }
+     else
+     {
+         _notifcationService.ErrorNotification("Kullanıcı bilgisi alınamadı", "hata");
+         return Json("RefresPage");
+     }
+ }
+ else
+ {
+     _notifcationService.WarningNotification("Devam edebilmek için giriş yapmalısınız", "Uyarı");
+     return Json("RefresPage");
+ }
