@@ -24,7 +24,7 @@ mesajları taslak olarak kaydedebilir, mesajlarını çöp kutusuna taşıyabili
 
 📌 AutoMapper; farklı veri nesnelerinin otomatik olarak eşleştirilerek dönüştürülmesini ve kopyalanmasını kolaylaştıran bir kütüphanedir. <br><br>
     📌 (örneğin mail adında bir entitymizin olduğunu ve bu entitynin birden cok propertysi olduğunu düşünelim CreateMailViewModel adında bir sınıf oluşturduğumuzda bu sınıfa bütün propertyleri tek tek atamamız gereklidir. AutoMapper işte tam burada kullanılır
-        birden cok nesneyi tek tek atamak yerine otomatik olarak verdiğimiz sınıflari birbiyle eşler.
+        birden cok nesneyi tek tek atamak yerine otomatik olarak verdiğimiz sınıflari birbiyle eşler.<br><br>
         Dikkat ! : verilerin eşitlenmesi için entity sınıfı ve oluşturulan ViewModel/Dto sınıflarının propertylerinin birebir aynı olması gereklidir aksi halde eşitleme işlemi başarıylı olamaz.<br><br>
 📌 mesaj gönderilirken, yanıtlanırken ve iletilirken automaper kullanılmıştır.
 
