@@ -13,8 +13,8 @@ mesajları taslak olarak kaydedebilir, mesajlarını çöp kutusuna taşıyabili
 
 <h1>SignalR Kütühanesi</h1>
 <h3>SignalR Nedir ?</h3>
-📌 SignalR, gerçek zamanlı uygulamalar geliştirmek için yazılmış açık kaynak kodlu bir .NET kütüphanedir. Normal HTTP bağlantılarında client-server iletişimi her istekte yenilenirken, SignalR ile client ve server arasında sürekli bir bağlantı sağlanır.<br>
-📌 Aşağıdaki Görsel de bir kullanıcı giriş yaptıktan sonra aktif olan bütün kullanıcılara görseldeki gibi bilidirm gitmektedir.<br>
+📌 SignalR, gerçek zamanlı uygulamalar geliştirmek için yazılmış açık kaynak kodlu bir .NET kütüphanedir. Normal HTTP bağlantılarında client-server iletişimi her istekte yenilenirken, SignalR ile client ve server arasında sürekli bir bağlantı sağlanır.<br><br>
+📌 Aşağıdaki Görsel de bir kullanıcı giriş yaptıktan sonra aktif olan bütün kullanıcılara görseldeki gibi bilidirm gitmektedir.<br><br>
 📌 Bu olay mesaj gönderme işleminde de kullanılmıştır, kullanıcı mesaj gönderdiğinde sadece mesajın gideceği kişinin tarayıcısında "Yeni Mesajınız Var" şeklinde bildirim gidecektir.<br><br>
 
 ![image](https://github.com/Sinantosun/AspnetCoreMessageIdentity/assets/145317724/8a306cd0-6b21-4959-978c-6d8dadcc3f95)
