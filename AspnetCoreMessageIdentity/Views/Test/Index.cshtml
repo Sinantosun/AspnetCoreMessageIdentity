@@ -1,0 +1,216 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/DefaultLayout/Index.cshtml";
+}
+
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script src="~/Template/inspinia-gh-pages/js/jquery-3.1.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    var result = "";
+    $(function () {
+
+
+
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7071/SignalRHub").build();
+        connection.start().then(() => {
+            connection.invoke("GetClientConnectionId");
+            connection.invoke("GetOnlineUsers");
+        });
+        connection.on("ClienConnectionId", data => {
+            document.getElementById("connectionID").innerText = data;
+        });
+
+        connection.on("UserJoined", data => {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "warning",
+                title: data + " sisteme giriş yaptı",
+            });
+
+        });
+
+        connection.on("AddClientName", data => {
+            var AddLiItem = `<li>${data}</li>`;
+            $(".OnlineUsers").append(AddLiItem);
+        });
+
+        connection.on("ActiveClientList", data => {
+            var jqueryResult = jQuery.parseJSON(data);
+
+            $(".OnlineUsers").empty();
+            $.each(jqueryResult, (index, value) => {
+
+                var AddLiItem = `<li><button class='btn btn-primary mb-2' onclick="ClickMe('${value.NameSurname}')">${value.NameSurname}</button></li>`;
+                $(".OnlineUsers").append(AddLiItem);
+            });
+        });
+
+        connection.on("GetClientMessage", data => {
+            AddReciverDiv(data);
+
+        
+        });
+
+
+
+        $("#loginbtn").click(function () {
+            var data = $("#loginTxt").val();
+            connection.invoke("SetUser", data);
+            connection.invoke("GetOnlineUsers");
+            $("#loginbtn").enlabed = false;
+
+        });
+
+
+        $("#btnMessageSendBtn").click(function () {
+    
+            var value = $("#message").val();
+            AddSenderDiv(value);
+            connection.invoke("GetMessage", value, result);
+
+
+        });
+
+
+
+    });
+
+    function ClickMe(data) {
+        result = data;
+        document.getElementById("ReciverName").innerText = "Mesaj Gönderilecek Kişi : " + result;
+    }
+
+    function AddSenderDiv(message) {
+        
+        var SenderDiv = `<div class='chat-message right'>
+                                          <img class="message-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt=" ">
+                                              <div class="message">
+                                                  <a class="message-author" href="#"> Siz </a>
+                                                       <span class="message-content">
+                                                                    ${message} <i class='fa fa-check text-info'></i><i class='fa fa-check text-info'></i>
+                                                       </span>
+                                              </div>
+                                     </div>`;
+        $(".chat-discussion").append(SenderDiv);
+        $("#message").val("");
+    }
+
+    function AddReciverDiv(message) {
+        
+        var ReciverDiv = `<div class='chat-message left'>
+                                              <img class="message-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt=" ">
+                                                  <div class="message">
+                                                          <a class="message-author" href="#"> ${result} </a>
+                                                           <span class="message-content">
+                                                                            ${message} <br><i class='fa fa-check text-info'></i><i class='fa fa-check text-info'></i>
+                                                           </span>
+                                                  </div>
+                                         </div>`;
+        $(".chat-discussion").append(ReciverDiv);
+        $("#message").val("");
+    }
+
+
+
+</script>
+
+
+
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+
+                    <h1>Bağlantı idniz : <strong id="connectionID"></strong></h1>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="text" id="loginTxt" placeholder="Adınız Soyadınız" class="form-control mb-3" />
+
+                            <button class="btn btn-danger mb-3" id="loginbtn">Giriş Yap</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="ibox chat-view">
+
+                <div class="ibox-title">
+                    <small class="float-right text-muted">Aktif Üyeler</small>
+                    ChatApp <br /><br /> <b><h4 id="ReciverName"></h4></b>
+                </div>
+
+
+                <div class="ibox-content">
+
+                    <div class="row">
+
+                        <div class="col-md-9 ">
+                            <div class="chat-discussion">
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="chat-users">
+
+
+                                <div class="users-list">
+                                    <br />
+                                    <div><ul class="OnlineUsers"></ul></div>
+
+
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="chat-message-form">
+
+                                <div class="form-group">
+
+                                    <textarea class="form-control message-input" id="message" placeholder="Mesajınız"></textarea>
+
+                                    <button class="btn btn-outline-primary mt-3 mb-3" id="btnMessageSendBtn" style="margin-left:10px">Gönder</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>

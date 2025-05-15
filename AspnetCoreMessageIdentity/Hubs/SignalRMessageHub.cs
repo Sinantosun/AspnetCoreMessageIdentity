@@ -4,6 +4,7 @@ using AspnetCoreMessageIdentity.Models.SignalRModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Newtonsoft.Json;
 
 namespace AspnetCoreMessageIdentity.Hubs
 {
@@ -15,6 +16,81 @@ namespace AspnetCoreMessageIdentity.Hubs
         {
             _userManager = userManager;
         }
+
+
+        public async Task GetMessage(string message, string ReciverNameSurname)
+        {
+            var user = ClientResources.ClientUsers.FirstOrDefault(x => x.NameSurname == ReciverNameSurname);
+            if (user != null)
+            {
+                await Clients.Client(user.ConnectionId).SendAsync("GetClientMessage",message);
+            }
+        }
+
+
+
+        public async Task GetOnlineUsers()
+        {
+            var list = ClientResources.ClientUsers.ToList();
+            if (list != null)
+            {
+                var parseList = JsonConvert.SerializeObject(list);
+                await Clients.All.SendAsync("ActiveClientList", parseList);
+            }
+        }
+
+
+        string oldName = "";
+        public async Task SetOnlineUser(string name)
+        {
+            if (oldName != name)
+            {
+                ClientResources.ClientUsers.Add(new ClientUser
+                {
+                    ConnectionId = Context.ConnectionId,
+                    NameSurname = name,
+                });
+
+                await Clients.All.SendAsync("AddClientName", name);
+            }
+
+        }
+        public async Task GetClientConnectionId()
+        {
+            await Clients.Caller.SendAsync("ClienConnectionId", Context.ConnectionId);
+        }
+        public async Task SetUser(string nameSurname)
+        {
+            var client = ClientResources.ClientUsers.FirstOrDefault(x => x.NameSurname == nameSurname);
+            if (client == null)
+            {
+                ClientUser userClient = new ClientUser()
+                {
+                    ConnectionId = Context.ConnectionId,
+                    NameSurname = nameSurname,
+                };
+                await Clients.Others.SendAsync("UserJoined", nameSurname.ToUpper());
+                ClientResources.ClientUsers.Add(userClient);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #region bu kısım signalR projesi ile alakı burası ile çalışmıyorusun.
 
         public async Task GetNickName(string nickname)
         {
@@ -55,7 +131,8 @@ namespace AspnetCoreMessageIdentity.Hubs
             var user = await _userManager.FindByEmailAsync(email);
 
             UserClient client = ClientSources.userClients.FirstOrDefault(x => x.NameSurname.ToLower() == user.NameSurname.ToLower());
-            await Clients.Client(client.ConnectionId).SendAsync("reciveMessage",  senderUser.ToUpper() + " Size Yeni Bir Mesaj Gönderdi");
+            await Clients.Client(client.ConnectionId).SendAsync("reciveMessage", senderUser.ToUpper() + " Size Yeni Bir Mesaj Gönderdi");
         }
+        #endregion
     }
 }
